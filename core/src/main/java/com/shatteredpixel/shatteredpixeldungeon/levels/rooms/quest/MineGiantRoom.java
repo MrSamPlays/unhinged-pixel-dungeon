@@ -43,7 +43,7 @@ public class MineGiantRoom extends CaveRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{0, 0, 1};
+		return new float[]{0, 0, 1, 0};
 	}
 
 	@Override

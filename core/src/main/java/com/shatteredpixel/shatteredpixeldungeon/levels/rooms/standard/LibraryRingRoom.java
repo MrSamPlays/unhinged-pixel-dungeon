@@ -42,14 +42,14 @@ public class LibraryRingRoom extends StandardRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{4, 2, 1};
+		return new float[]{8, 5, 3, 1};
 	}
 
-	//cannot roll odd numbers if it is giant
+	//cannot roll odd numbers if it is giant or megalomaniac
 	@Override
 	public Rect resize(int w, int h) {
 		super.resize(w, h);
-		if (sizeCat == SizeCategory.GIANT) {
+		if (sizeCat == SizeCategory.GIANT || sizeCat == SizeCategory.MEGALOMANIAC) {
 			if (width() % 2 == 1) right--;
 			if (height() % 2 == 1) bottom--;
 		}
@@ -64,7 +64,7 @@ public class LibraryRingRoom extends StandardRoom {
 
 		Painter.fill(level, this, 4, Terrain.BOOKSHELF);
 
-		if (sizeCat == SizeCategory.GIANT){
+		if (sizeCat == SizeCategory.GIANT || sizeCat == SizeCategory.MEGALOMANIAC){
 			Point c = new Point((left + right) / 2, (top + bottom) / 2); //always round down
 			Painter.fill(level, c.x-4, c.y, 10, 2, Terrain.EMPTY);
 			Painter.fill(level, c.x, c.y-4, 2, 10, Terrain.EMPTY);

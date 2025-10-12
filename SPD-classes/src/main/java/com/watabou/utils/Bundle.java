@@ -53,7 +53,7 @@ public class Bundle {
 
 	public static final String DEFAULT_KEY = "key";
 
-	private static HashMap<String,String> aliases = new HashMap<>();
+	private static final HashMap<String,String> aliases = new HashMap<>();
 
 	/*
 		WARNING: NOT ALL METHODS IN ORG.JSON ARE PRESENT ON ANDROID/IOS!
@@ -69,7 +69,7 @@ public class Bundle {
 		what methods exist in all versions of org.json. This class is also commented in places
 		Where Android/iOS force the use of unusual methods.
 	 */
-	private JSONObject data;
+	private final JSONObject data;
 
 	public Bundle() {
 		this( new JSONObject() );

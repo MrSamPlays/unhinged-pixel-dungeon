@@ -43,7 +43,7 @@ public class RitualRoom extends PatchRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{6, 3, 1};
+		return new float[]{6, 3, 1, 1};
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class RitualRoom extends PatchRoom {
 		// large    ~40% to ~50%
 		// giant    ~50% to ~60%
 		// however,  the inner 7x7 is overridden, so overall fill is much lower
-		int scale = Math.min(width()*height(), 18*18);
+		int scale = Math.min(width()*height(), 25*25);
 		return 0.30f + scale/1024f;
 	}
 

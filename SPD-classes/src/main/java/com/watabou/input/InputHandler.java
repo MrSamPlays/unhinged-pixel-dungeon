@@ -30,7 +30,7 @@ import com.watabou.utils.PointF;
 
 public class InputHandler extends InputAdapter {
 
-	private InputMultiplexer multiplexer;
+	private final InputMultiplexer multiplexer;
 
 	public InputHandler( Input input ){
 		multiplexer = new InputMultiplexer();

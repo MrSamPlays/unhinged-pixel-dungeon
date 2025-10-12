@@ -254,13 +254,9 @@ public class ControllerHandler implements ControllerListener {
 			return true;
 		}
 
-		if (keyCode >= Input.Keys.DPAD_UP+DPAD_KEY_OFFSET
-				&& keyCode <= Input.Keys.DPAD_RIGHT+DPAD_KEY_OFFSET){
-			return true;
-		}
-
-		return false;
-	}
+        return keyCode >= Input.Keys.DPAD_UP + DPAD_KEY_OFFSET
+                && keyCode <= Input.Keys.DPAD_RIGHT + DPAD_KEY_OFFSET;
+    }
 
 	public static String customButtonName(int keyCode){
 		if (lastUsedType == ControllerType.PLAYSTATION){

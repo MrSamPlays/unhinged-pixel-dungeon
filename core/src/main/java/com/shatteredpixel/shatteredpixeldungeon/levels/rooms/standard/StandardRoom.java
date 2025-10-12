@@ -37,7 +37,8 @@ public abstract class StandardRoom extends Room {
 		
 		NORMAL(4, 10, 1),
 		LARGE(10, 14, 2),
-		GIANT(14, 18, 3);
+		GIANT(14, 18, 3),
+		MEGALOMANIAC(18, 25,4);
 		
 		public final int minDim, maxDim;
 		public final int roomValue;
@@ -57,7 +58,7 @@ public abstract class StandardRoom extends Room {
 	//but would (effectively) never roll that size category, consider using Float.MIN_VALUE
 	public float[] sizeCatProbs(){
 		//always normal by default
-		return new float[]{1, 0, 0};
+		return new float[]{1, 0, 0, 0};
 	}
 	
 	public boolean setSizeCat(){

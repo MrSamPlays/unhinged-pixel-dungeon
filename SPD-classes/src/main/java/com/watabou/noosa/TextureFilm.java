@@ -31,8 +31,8 @@ public class TextureFilm {
 	
 	private static final RectF FULL = new RectF( 0, 0, 1, 1 );
 	
-	private int texWidth;
-	private int texHeight;
+	private final int texWidth;
+	private final int texHeight;
 	
 	protected HashMap<Object,RectF> frames = new HashMap<>();
 	

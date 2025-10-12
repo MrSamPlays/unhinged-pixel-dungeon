@@ -44,7 +44,7 @@ public class PlatformRoom extends StandardRoom {
 	
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{6, 3, 1};
+		return new float[]{6, 3, 1, 1};
 	}
 	
 	@Override

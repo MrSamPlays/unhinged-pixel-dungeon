@@ -42,14 +42,14 @@ public class Tilemap extends Visual {
 	protected int mapHeight;
 	protected int size;
 
-	private float cellW;
-	private float cellH;
+	private final float cellW;
+	private final float cellH;
 
 	protected float[] vertices;
 	protected FloatBuffer quads;
 	protected Vertexbuffer buffer;
 
-	private volatile Rect updated;
+	private final Rect updated;
 	private boolean fullUpdate;
 	private Rect updating;
 	private int topLeftUpdating;

@@ -22,6 +22,7 @@
 package com.watabou.glwrap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.watabou.noosa.Game;
 
@@ -29,7 +30,7 @@ import java.nio.IntBuffer;
 
 public class Program {
 
-	private int handle;
+	private final int handle;
 	
 	public Program() {
 		handle = Gdx.gl.glCreateProgram();
@@ -47,8 +48,8 @@ public class Program {
 		Gdx.gl.glLinkProgram( handle );
 		
 		IntBuffer status = BufferUtils.newIntBuffer(1);
-		Gdx.gl.glGetProgramiv( handle, Gdx.gl.GL_LINK_STATUS, status );
-		if (status.get() == Gdx.gl.GL_FALSE) {
+		Gdx.gl.glGetProgramiv( handle, GL20.GL_LINK_STATUS, status );
+		if (status.get() == GL20.GL_FALSE) {
 			Game.reportException( new RuntimeException( Gdx.gl.glGetProgramInfoLog( handle ) ) );
 		}
 	}

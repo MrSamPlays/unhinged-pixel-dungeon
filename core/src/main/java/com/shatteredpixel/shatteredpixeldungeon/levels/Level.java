@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesi
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
@@ -218,8 +219,11 @@ public abstract class Level implements Bundlable {
 
 		//TODO maybe just make this part of RegularLevel?
 		if (!Dungeon.bossLevel() && Dungeon.branch == 0) {
-
-			addItemToSpawn(Generator.random(Generator.Category.FOOD));
+			int foodToGenerate = Random.Int(1,10);
+			for (int i=0; i<foodToGenerate; i++) {
+				// now we'll generate up to 9 food, but one food per floor is at least guaranteed.
+				addItemToSpawn(Generator.random(Generator.Category.FOOD));
+			}
 
 			if (Dungeon.posNeeded()) {
 				Dungeon.LimitedDrops.STRENGTH_POTIONS.count++;
@@ -235,6 +239,27 @@ public abstract class Level implements Bundlable {
 					addItemToSpawn(new ScrollOfUpgrade());
 				}
 			}
+			// generate up to 2 additional scrolls of upgrade at random (but only if not playing the no scrolls challenge)
+			if (!Dungeon.isChallenged(Challenges.NO_SCROLLS)) {
+				// generate more upgrade scrolls in late game
+				int extra_sou = Dungeon.depth < 11 ? Random.chances(new float[]{9,1,1}) : Random.chances(new float[]{5,4,4,2,1,1});
+				for (int i=0; i<extra_sou; i++) {
+					addItemToSpawn(new ScrollOfUpgrade());
+				}
+			}
+			// generate up to 1 additional strength potions at random for each floor
+			{
+				int extra_pos = Random.chances(new float[]{7,3});
+				for (int i=0; i<extra_pos; i++) {
+					addItemToSpawn(new PotionOfStrength());
+				}
+			}
+
+			// always generate at least 1 scroll of identify on floor 1
+			if (Dungeon.depth == 1) {
+				addItemToSpawn(new ScrollOfIdentify());
+			}
+
 			if (Dungeon.asNeeded()) {
 				Dungeon.LimitedDrops.ARCANE_STYLI.count++;
 				addItemToSpawn( new Stylus() );
@@ -272,6 +297,10 @@ public abstract class Level implements Bundlable {
 					case 4:
 						feeling = Feeling.LARGE;
 						addItemToSpawn(Generator.random(Generator.Category.FOOD));
+						// 10% chance of getting another food from a large room
+						if (Random.chances(new float[]{9,1}) == 1) {
+							addItemToSpawn(Generator.random(Generator.Category.FOOD));
+						}
 						break;
 					case 5:
 						feeling = Feeling.TRAPS;

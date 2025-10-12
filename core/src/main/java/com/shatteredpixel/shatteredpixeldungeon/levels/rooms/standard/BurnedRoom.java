@@ -34,7 +34,7 @@ public class BurnedRoom extends PatchRoom {
 	
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{4, 1, 0};
+		return new float[]{4, 1, 0, 0};
 	}
 
 	@Override

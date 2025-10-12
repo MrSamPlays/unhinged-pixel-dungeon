@@ -22,6 +22,7 @@
 package com.watabou.glwrap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -62,17 +63,17 @@ public class Quad {
 		if (bufferIndex == -1){
 			bufferIndex = Gdx.gl.glGenBuffer();
 		}
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, bufferIndex);
-		Gdx.gl.glBufferData(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, (indices.capacity()*2), indices, Gdx.gl.GL_STATIC_DRAW);
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, 0);
+		Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, bufferIndex);
+		Gdx.gl.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, (indices.capacity()*2), indices, GL20.GL_STATIC_DRAW);
+		Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	public static void bindIndices(){
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, bufferIndex);
+		Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, bufferIndex);
 	}
 
 	public static void releaseIndices(){
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, 0);
+		Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
 	public static ShortBuffer getIndices( int size ) {
@@ -89,10 +90,10 @@ public class Quad {
 			int pos = 0;
 			int limit = size * 4;
 			for (int ofs=0; ofs < limit; ofs += 4) {
-				values[pos++] = (short)(ofs + 0);
+				values[pos++] = (short)(ofs);
 				values[pos++] = (short)(ofs + 1);
 				values[pos++] = (short)(ofs + 2);
-				values[pos++] = (short)(ofs + 0);
+				values[pos++] = (short)(ofs);
 				values[pos++] = (short)(ofs + 2);
 				values[pos++] = (short)(ofs + 3);
 			}

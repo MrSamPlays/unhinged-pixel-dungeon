@@ -24,6 +24,7 @@ package com.watabou.noosa;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.watabou.glscripts.Script;
@@ -80,7 +81,7 @@ public class Game implements ApplicationListener {
 		sceneClass = c;
 		
 		instance = this;
-		this.platform = platform;
+		Game.platform = platform;
 	}
 	
 	@Override
@@ -161,11 +162,11 @@ public class Game implements ApplicationListener {
 
 		NoosaScript.get().resetCamera();
 		NoosaScriptNoLighting.get().resetCamera();
-		Gdx.gl.glDisable(Gdx.gl.GL_SCISSOR_TEST);
-		Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		draw();
 
-		Gdx.gl.glDisable( Gdx.gl.GL_SCISSOR_TEST );
+		Gdx.gl.glDisable( GL20.GL_SCISSOR_TEST );
 		
 		step();
 	}
@@ -206,7 +207,7 @@ public class Game implements ApplicationListener {
 	}
 	
 	public static void resetScene() {
-		switchScene( instance.sceneClass );
+		switchScene( sceneClass );
 	}
 
 	public static void switchScene(Class<? extends Scene> c) {
@@ -214,7 +215,7 @@ public class Game implements ApplicationListener {
 	}
 	
 	public static void switchScene(Class<? extends Scene> c, SceneChangeCallback callback) {
-		instance.sceneClass = c;
+		sceneClass = c;
 		instance.requestedReset = true;
 		instance.onChange = callback;
 	}
@@ -291,7 +292,7 @@ public class Game implements ApplicationListener {
 			PrintWriter pw = new PrintWriter(sw);
 			tr.printStackTrace(pw);
 			pw.flush();
-			System.err.println(sw.toString());
+			System.err.println(sw);
 		}
 	}
 	

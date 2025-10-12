@@ -166,7 +166,7 @@ public enum Music {
 		}
 	}
 
-	private com.badlogic.gdx.audio.Music.OnCompletionListener trackLooper = new com.badlogic.gdx.audio.Music.OnCompletionListener() {
+	private final com.badlogic.gdx.audio.Music.OnCompletionListener trackLooper = new com.badlogic.gdx.audio.Music.OnCompletionListener() {
 		@Override
 		public void onCompletion(com.badlogic.gdx.audio.Music music) {
 			//don't play the next track if we're currently in the middle of a fade
@@ -208,9 +208,9 @@ public enum Music {
 		}
 
 		play(trackQueue.remove(0), trackLooper);
-	};
+	}
 
-	private synchronized void play(String track, com.badlogic.gdx.audio.Music.OnCompletionListener listener){
+    private synchronized void play(String track, com.badlogic.gdx.audio.Music.OnCompletionListener listener){
 		try {
 			fadeTime = fadeTotal = -1;
 

@@ -43,7 +43,8 @@ public class LibraryHallRoom extends StandardRoom {
 	public float[] sizeCatProbs(){
 		//TODO this room could probably have a giant variant?
 		// possible with three lines of bookcases instead of 2, and/or will holes in the middle
-		return new float[]{2, 1, 0};
+		// Guess what, we're getting the largest library known to mankind
+		return new float[]{2, 1, 1, 1};
 	}
 
 	@Override

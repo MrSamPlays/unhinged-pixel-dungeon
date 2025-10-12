@@ -28,7 +28,7 @@ public class RegionDecoBridgeRoom extends StandardBridgeRoom {
 
 	//can be large because the line breaks the space up
 	public float[] sizeCatProbs(){
-		return new float[]{2, 1, 0};
+		return new float[]{2, 1, 0, 0};
 	}
 
 	protected int maxBridgeWidth( int roomDimension ) {

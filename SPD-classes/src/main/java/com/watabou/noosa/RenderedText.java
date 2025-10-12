@@ -138,7 +138,7 @@ public class RenderedText extends Image {
 		}
 	}
 	
-	private static TextRenderBatch textRenderer = new TextRenderBatch();
+	private static final TextRenderBatch textRenderer = new TextRenderBatch();
 	
 	@Override
 	public synchronized void draw() {
@@ -157,8 +157,8 @@ public class RenderedText extends Image {
 		//this isn't as good as only updating once, like with BitmapText
 		// but it skips almost all allocations, which is almost as good
 		private static RenderedText textBeingRendered = null;
-		private static float[] vertices = new float[16];
-		private static HashMap<Integer, FloatBuffer> buffers = new HashMap<>();
+		private static final float[] vertices = new float[16];
+		private static final HashMap<Integer, FloatBuffer> buffers = new HashMap<>();
 
 		@Override
 		public void draw(Texture texture, float[] spriteVertices, int offset, int count) {
@@ -175,7 +175,7 @@ public class RenderedText extends Image {
 			
 			for (int i = 0; i < count; i += 20){
 				
-				vertices[0]     = spriteVertices[i+0];
+				vertices[0]     = spriteVertices[i];
 				vertices[1]     = spriteVertices[i+1];
 				
 				vertices[2]     = spriteVertices[i+3];

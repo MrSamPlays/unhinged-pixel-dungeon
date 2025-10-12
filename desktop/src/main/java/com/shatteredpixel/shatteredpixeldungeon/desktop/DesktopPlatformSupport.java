@@ -136,7 +136,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 		packer = new PixmapPacker(pageSize, pageSize, Pixmap.Format.RGBA8888, 1, false);
 	}
 	
-	private static Matcher asianMatcher = Pattern.compile("\\p{InHangul_Syllables}|" +
+	private static final Matcher asianMatcher = Pattern.compile("\\p{InHangul_Syllables}|" +
 			"\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}|" +
 			"\\p{InHiragana}|\\p{InKatakana}").matcher("");
 
@@ -150,7 +150,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 	}
 	
 	//splits on newline (for layout), chinese/japanese (for font choice), and '_'/'**' (for highlighting)
-	private Pattern regularsplitter = Pattern.compile(
+	private final Pattern regularsplitter = Pattern.compile(
 			"(?<=\n)|(?=\n)|(?<=_)|(?=_)|(?<=\\*\\*)|(?=\\*\\*)|" +
 					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
@@ -158,7 +158,7 @@ public class DesktopPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})");
 	
 	//additionally splits on spaces, so that each word can be laid out individually
-	private Pattern regularsplitterMultiline = Pattern.compile(
+	private final Pattern regularsplitterMultiline = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|(?<=\\*\\*)|(?=\\*\\*)|" +
 					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +

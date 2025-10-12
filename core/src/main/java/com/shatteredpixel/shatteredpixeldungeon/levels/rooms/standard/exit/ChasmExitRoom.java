@@ -43,7 +43,7 @@ public class ChasmExitRoom extends ChasmRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{2, 1, 0};
+		return new float[]{2, 1, 0, 0};
 	}
 
 	@Override

@@ -22,12 +22,13 @@
 package com.watabou.glwrap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 import java.nio.FloatBuffer;
 
 public class Attribute {
 
-	private int location;
+	private final int location;
 	
 	public Attribute( int location ) {
 		this.location = location;
@@ -46,10 +47,10 @@ public class Attribute {
 	}
 	
 	public void vertexPointer( int size, int stride, FloatBuffer ptr ) {
-		Gdx.gl.glVertexAttribPointer( location, size, Gdx.gl.GL_FLOAT, false, stride * 4, ptr );
+		Gdx.gl.glVertexAttribPointer( location, size, GL20.GL_FLOAT, false, stride * 4, ptr );
 	}
 
 	public void vertexBuffer( int size, int stride, int offset) {
-		Gdx.gl.glVertexAttribPointer(location, size, Gdx.gl.GL_FLOAT, false, stride * 4, offset * 4);
+		Gdx.gl.glVertexAttribPointer(location, size, GL20.GL_FLOAT, false, stride * 4, offset * 4);
 	}
 }

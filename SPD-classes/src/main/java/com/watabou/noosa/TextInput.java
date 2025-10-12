@@ -48,13 +48,13 @@ import com.watabou.utils.Point;
 //essentially contains a libGDX text input field, plus a PD-rendered background
 public class TextInput extends Component {
 
-	private Stage stage;
-	private Container container;
-	private TextField textField;
+	private final Stage stage;
+	private final Container container;
+	private final TextField textField;
 
-	private Skin skin;
+	private final Skin skin;
 
-	private NinePatch bg;
+	private final NinePatch bg;
 
 	public TextInput( NinePatch bg, boolean multiline, int size ){
 		super();
@@ -152,9 +152,9 @@ public class TextInput extends Component {
 
 	public void enterPressed(){
 		//fires any time enter is pressed, do nothing by default
-	};
+	}
 
-	public void onChanged(){
+    public void onChanged(){
 		//fires any time the text box is changed, do nothing by default
 	}
 

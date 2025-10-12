@@ -22,6 +22,7 @@
 package com.watabou.glwrap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 public class Vertexbuffer {
 
-	private int id;
+	private final int id;
 	private FloatBuffer vertices;
 	private int updateStart, updateEnd;
 
@@ -79,9 +80,9 @@ public class Vertexbuffer {
 		bind();
 
 		if (updateStart == 0 && updateEnd == vertices.limit()){
-			Gdx.gl.glBufferData(Gdx.gl.GL_ARRAY_BUFFER, vertices.limit()*4, vertices, Gdx.gl.GL_DYNAMIC_DRAW);
+			Gdx.gl.glBufferData(GL20.GL_ARRAY_BUFFER, vertices.limit()*4, vertices, GL20.GL_DYNAMIC_DRAW);
 		} else {
-			Gdx.gl.glBufferSubData(Gdx.gl.GL_ARRAY_BUFFER, updateStart*4, (updateEnd - updateStart)*4, vertices);
+			Gdx.gl.glBufferSubData(GL20.GL_ARRAY_BUFFER, updateStart*4, (updateEnd - updateStart)*4, vertices);
 		}
 
 		release();
@@ -89,11 +90,11 @@ public class Vertexbuffer {
 	}
 
 	public void bind(){
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, id);
+		Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, id);
 	}
 
 	public void release(){
-		Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, 0);
+		Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, 0);
 	}
 
 	public void delete(){

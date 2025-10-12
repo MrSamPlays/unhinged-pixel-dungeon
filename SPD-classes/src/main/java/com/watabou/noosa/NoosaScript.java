@@ -22,6 +22,7 @@
 package com.watabou.noosa;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.watabou.glscripts.Script;
 import com.watabou.glwrap.Attribute;
 import com.watabou.glwrap.Quad;
@@ -82,7 +83,7 @@ public class NoosaScript extends Script {
 		aUV.vertexPointer( 2, 4, vertices );
 
 		Quad.releaseIndices();
-		Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, size, Gdx.gl20.GL_UNSIGNED_SHORT, indices );
+		Gdx.gl20.glDrawElements( GL20.GL_TRIANGLES, size, GL20.GL_UNSIGNED_SHORT, indices );
 		Quad.bindIndices();
 	}
 
@@ -94,7 +95,7 @@ public class NoosaScript extends Script {
 		((Buffer)vertices).position( 2 );
 		aUV.vertexPointer( 2, 4, vertices );
 		
-		Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
+		Gdx.gl20.glDrawElements( GL20.GL_TRIANGLES, Quad.SIZE, GL20.GL_UNSIGNED_SHORT, 0 );
 	}
 
 	public void drawQuad( Vertexbuffer buffer ) {
@@ -108,7 +109,7 @@ public class NoosaScript extends Script {
 
 		buffer.release();
 		
-		Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
+		Gdx.gl20.glDrawElements( GL20.GL_TRIANGLES, Quad.SIZE, GL20.GL_UNSIGNED_SHORT, 0 );
 	}
 	
 	public void drawQuadSet( FloatBuffer vertices, int size ) {
@@ -123,7 +124,7 @@ public class NoosaScript extends Script {
 		((Buffer)vertices).position( 2 );
 		aUV.vertexPointer( 2, 4, vertices );
 		
-		Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE * size, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
+		Gdx.gl20.glDrawElements( GL20.GL_TRIANGLES, Quad.SIZE * size, GL20.GL_UNSIGNED_SHORT, 0 );
 	}
 
 	public void drawQuadSet( Vertexbuffer buffer, int length, int offset ){
@@ -141,7 +142,7 @@ public class NoosaScript extends Script {
 
 		buffer.release();
 		
-		Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE * length, Gdx.gl20.GL_UNSIGNED_SHORT, Quad.SIZE * Short.SIZE/8 * offset );
+		Gdx.gl20.glDrawElements( GL20.GL_TRIANGLES, Quad.SIZE * length, GL20.GL_UNSIGNED_SHORT, Quad.SIZE * Short.SIZE/8 * offset );
 	}
 	
 	public void lighting( float rm, float gm, float bm, float am, float ra, float ga, float ba, float aa ) {
@@ -162,7 +163,7 @@ public class NoosaScript extends Script {
 			uCamera.valueM4( camera.matrix );
 
 			if (!camera.fullScreen) {
-				Gdx.gl20.glEnable( Gdx.gl20.GL_SCISSOR_TEST );
+				Gdx.gl20.glEnable( GL20.GL_SCISSOR_TEST );
 
 				//This fixes pixel scaling issues on some hidpi displays (mainly on macOS)
 				// because for some reason all other openGL operations work on virtual pixels
@@ -176,7 +177,7 @@ public class NoosaScript extends Script {
 						Math.round(camera.screenWidth * xScale),
 						Math.round(camera.screenHeight * yScale));
 			} else {
-				Gdx.gl20.glDisable( Gdx.gl20.GL_SCISSOR_TEST );
+				Gdx.gl20.glDisable( GL20.GL_SCISSOR_TEST );
 			}
 		}
 	}

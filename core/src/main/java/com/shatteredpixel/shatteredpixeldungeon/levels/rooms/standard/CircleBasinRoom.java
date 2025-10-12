@@ -37,7 +37,7 @@ public class CircleBasinRoom extends PatchRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{0, 3, 1};
+		return new float[]{0, 3, 1, 1};
 	}
 
 	//cannot roll even numbers

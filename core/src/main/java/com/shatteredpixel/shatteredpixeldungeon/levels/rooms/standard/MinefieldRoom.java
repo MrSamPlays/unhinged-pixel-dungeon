@@ -35,7 +35,7 @@ public class MinefieldRoom extends StandardRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{4, 1, 0};
+		return new float[]{4, 1, 1, 0};
 	}
 
 	@Override

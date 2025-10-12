@@ -46,7 +46,7 @@ public class CavesFissureRoom extends StandardRoom {
 
 	@Override
 	public float[] sizeCatProbs() {
-		return new float[]{9, 3, 1};
+		return new float[]{16, 6, 4, 1};
 	}
 
 	@Override
@@ -155,27 +155,28 @@ public class CavesFissureRoom extends StandardRoom {
 				PointF curr = new PointF(center);
 				int cell = (int) curr.x + ((int) curr.y) * level.width();
 				Painter.set(level, cell, Terrain.CHASM);
+				boolean large_room = sizeCat == SizeCategory.GIANT || sizeCat == SizeCategory.MEGALOMANIAC;
 				do {
 					if (!horizontal) {
 						if (level.map[cell - 1] == Terrain.EMPTY
-								&& ((curr.x % 1 <= 0.5f) || sizeCat == SizeCategory.GIANT)) {
+								&& ((curr.x % 1 <= 0.5f) || large_room)) {
 							Painter.set(level, cell - 1, Terrain.CHASM);
 						}
 						if (level.map[cell] == Terrain.EMPTY)
 							Painter.set(level, cell, Terrain.CHASM);
 						if (level.map[cell + 1] == Terrain.EMPTY
-								&& ((curr.x % 1 > 0.5f) || sizeCat == SizeCategory.GIANT)) {
+								&& ((curr.x % 1 > 0.5f) || large_room)) {
 							Painter.set(level, cell + 1, Terrain.CHASM);
 						}
 					} else {
 						if (level.map[cell - level.width()] == Terrain.EMPTY
-								&& ((curr.y % 1 <= 0.5f) || sizeCat == SizeCategory.GIANT)) {
+								&& ((curr.y % 1 <= 0.5f) || large_room)) {
 							Painter.set(level, cell - level.width(), Terrain.CHASM);
 						}
 						if (level.map[cell] == Terrain.EMPTY)
 							Painter.set(level, cell, Terrain.CHASM);
 						if (level.map[cell + level.width()] == Terrain.EMPTY
-								&& ((curr.y % 1 > 0.5f) || sizeCat == SizeCategory.GIANT)) {
+								&& ((curr.y % 1 > 0.5f) || large_room)) {
 							Painter.set(level, cell + level.width(), Terrain.CHASM);
 						}
 					}
@@ -189,7 +190,7 @@ public class CavesFissureRoom extends StandardRoom {
 
 			//add chasm to the center in larger rooms
 			if (lineAngles.size() >= 3) {
-				if (sizeCat == SizeCategory.GIANT) {
+				if (sizeCat == SizeCategory.GIANT || sizeCat == SizeCategory.MEGALOMANIAC) {
 					Painter.fill(level, (int) center.x - 2, (int) center.y - 2, 5, 5, Terrain.CHASM);
 				} else {
 					Painter.fill(level, (int) center.x - 1, (int) center.y - 1, 3, 3, Terrain.CHASM);
