@@ -1195,8 +1195,8 @@ public abstract class Level implements Bundlable {
 				return;
 			}
 			
-			//characters which are not the hero or a sheep 'soft' press cells
-			pressCell( ch.pos, ch instanceof Hero || ch instanceof Sheep);
+			// ~~characters which are not the hero or a sheep 'soft' press cells~~ - changed, (all non flying mobs can trip hidden traps)
+			pressCell( ch.pos, ch instanceof Hero || (ch instanceof Mob && !ch.flying));
 		} else {
 			if (map[ch.pos] == Terrain.DOOR){
 				Door.enter( ch.pos );
@@ -1447,6 +1447,7 @@ public abstract class Level implements Bundlable {
 
 				if (mindVisRange >= 1) {
 					for (Mob mob : mobs) {
+						// mind vision doesn't touch mimics, should we change that?
 						if (mob instanceof Mimic && mob.alignment == Char.Alignment.NEUTRAL && ((Mimic) mob).stealthy()){
 							continue;
 						}

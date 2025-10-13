@@ -40,10 +40,10 @@ public class DM200 extends Mob {
 	{
 		spriteClass = DM200Sprite.class;
 
-		HP = HT = 80;
-		defenseSkill = 12;
+		HP = HT = 100;
+		defenseSkill = 10;
 
-		EXP = 9;
+		EXP = 11;
 		maxLvl = 17;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -57,7 +57,7 @@ public class DM200 extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 10, 25 );
+		return Random.NormalIntRange( 5, 20 );
 	}
 
 	@Override
@@ -72,9 +72,8 @@ public class DM200 extends Mob {
 
 	@Override
 	public float lootChance(){
-		//each drop makes future drops 1/3 as likely
-		// so loot chance looks like: 1/5, 1/15, 1/45, 1/135, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.DM200_EQUIP.count);
+		// loot decays exponentially
+		return Math.max(super.lootChance() * (float)Math.pow(2/3f, Dungeon.LimitedDrops.DM200_EQUIP.count),0.01f);
 	}
 
 	public Item createLoot() {
@@ -116,14 +115,14 @@ public class DM200 extends Mob {
 
 	private void zap( ){
 		spend( TICK );
-		ventCooldown = 30;
+		ventCooldown = 50;
 
 		Ballistica trajectory = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Blob.seed(i, 20, ToxicGas.class));
+			GameScene.add(Blob.seed(i, 25, ToxicGas.class));
 		}
-		GameScene.add(Blob.seed(trajectory.collisionPos, 100, ToxicGas.class));
+		GameScene.add(Blob.seed(trajectory.collisionPos, 120, ToxicGas.class));
 
 	}
 

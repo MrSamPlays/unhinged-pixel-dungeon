@@ -29,7 +29,7 @@ public class MindVision extends FlavourBuff {
 
 	public static final float DURATION = 20f;
 	
-	public int distance = 2;
+	public int distance = 3;
 
 	{
 		type = buffType.POSITIVE;

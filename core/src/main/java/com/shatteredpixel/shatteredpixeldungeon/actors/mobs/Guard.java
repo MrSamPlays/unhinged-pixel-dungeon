@@ -48,9 +48,9 @@ public class Guard extends Mob {
 	{
 		spriteClass = GuardSprite.class;
 
-		HP = HT = 40;
+		HP = HT = 30;
 		defenseSkill = 10;
-
+		viewDistance = 10; // very difficult to surprise guards
 		EXP = 7;
 		maxLvl = 14;
 
@@ -58,7 +58,7 @@ public class Guard extends Mob {
 		lootChance = 0.2f; //by default, see lootChance()
 
 		properties.add(Property.UNDEAD);
-		
+
 		HUNTING = new Hunting();
 	}
 
@@ -180,7 +180,7 @@ public class Guard extends Mob {
 					&& enemyInFOV
 					&& !isCharmedBy( enemy )
 					&& !canAttack( enemy )
-					&& Dungeon.level.distance( pos, enemy.pos ) < 5
+					&& Dungeon.level.distance( pos, enemy.pos ) < 8
 
 					
 					&& chain(enemy.pos)){

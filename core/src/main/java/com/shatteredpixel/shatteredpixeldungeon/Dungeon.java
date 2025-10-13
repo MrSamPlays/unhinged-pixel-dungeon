@@ -581,10 +581,19 @@ public class Dungeon {
 
 	public static boolean labRoomNeeded(){
 		//one laboratory each floor set, in floor 3 or 4, 1/2 chance each floor
-		int region = 1+depth/5;
-		if (region > LimitedDrops.LAB_ROOM.count){
+		if (Dungeon.depth == 1) {
+			// first floor never contains a lab
+			return false;
+		} else if (Dungeon.depth == 2) {
+			// second floor always contains a lab
+			return true;
+		}
+		int region = 1+depth/5; // two labs can spawn now
+		if (2*region > LimitedDrops.LAB_ROOM.count){
 			int floorThisRegion = depth%5;
 			if (floorThisRegion >= 4 || (floorThisRegion == 3 && Random.Int(2) == 0)){
+				return true;
+			} else if (region > 1 && (floorThisRegion >= 2 || (floorThisRegion == 1 && Random.Int(2)== 0))) { // special rules for the sewers (floor 2 always has a lab)
 				return true;
 			}
 		}

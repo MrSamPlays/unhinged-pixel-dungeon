@@ -71,7 +71,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 						level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().quantity(5), pos );
+		level.drop( new EnergyCrystal().quantity(Random.IntRange(5,Math.max(Dungeon.depth*2,5))), pos );
 
 		int n = Random.NormalIntRange( 1, 2 );
 		for (int i=0; i < n; i++) {

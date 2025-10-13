@@ -112,16 +112,16 @@ public class HighGrass {
 				}
 			}
 
-			//grass gives 1/3 the normal amount of loot in fungi level
+			//grass gives 2/3 the normal amount of loot in fungi level
 			if (Dungeon.level instanceof MiningLevel
 					&& Blacksmith.Quest.Type() == Blacksmith.Quest.FUNGI
-					&& Random.Int(3) != 0){
+					&& Random.Int(3) == 0){
 				naturalismLevel = -1;
 			}
-			
+			// sandals level 4
 			if (naturalismLevel >= 0) {
-				// Seed, scales from 1/25 to 1/9
-				float lootChance = 1/(25f - naturalismLevel*4f);
+				// Seed, scales from 1/16 to 1/4
+				float lootChance = 1/(16f - naturalismLevel*3f);
 
 				// absolute max drop rate is ~1/6.5 with footwear of nature, ~1/18 without
 				lootChance *= PetrifiedSeed.grassLootMultiplier();
@@ -134,12 +134,12 @@ public class HighGrass {
 					}
 				}
 				
-				// Dew, scales from 1/6 to 1/4
-				lootChance = 1/(6f -naturalismLevel/2f);
+				// Dew, scales from 1/4 to 1/2 (max level sandals)
+				lootChance = 1/(4f - naturalismLevel/2f);
 
-				//grassy levels spawn half as much dew
+				//grassy levels spawn 80% the dew amount
 				if (Dungeon.level != null && Dungeon.level.feeling == Level.Feeling.GRASS){
-					lootChance /= 2;
+					lootChance *= 0.8f;
 				}
 
 				if (Random.Float() < lootChance) {
