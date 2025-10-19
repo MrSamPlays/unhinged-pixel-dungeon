@@ -47,6 +47,7 @@ public class DisintegrationTrap extends Trap {
 		
 		canBeHidden = false;
 		avoidsHallways = true;
+		isNearest = true;
 	}
 
 	@Override

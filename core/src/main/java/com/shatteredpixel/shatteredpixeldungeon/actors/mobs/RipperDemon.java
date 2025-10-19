@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -55,7 +56,8 @@ public class RipperDemon extends Mob {
 		maxLvl = -2;
 
 		HUNTING = new Hunting();
-
+		loot = Generator.randomUsingDefaults(Generator.Category.POTION);
+		lootChance = 0.05f;
 		baseSpeed = 1f;
 
 		properties.add(Property.DEMONIC);

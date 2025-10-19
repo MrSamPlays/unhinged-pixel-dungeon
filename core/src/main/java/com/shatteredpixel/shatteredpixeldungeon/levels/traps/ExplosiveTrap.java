@@ -34,6 +34,7 @@ public class ExplosiveTrap extends Trap {
 	{
 		color = ORANGE;
 		shape = DIAMOND;
+		isAoE = true;
 	}
 
 	@Override

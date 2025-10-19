@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Vertigo extends FlavourBuff {
 
-	public static final float DURATION	= 10f;
+	public static final float DURATION	= 20f;
 
 	{
 		type = buffType.NEGATIVE;

@@ -45,6 +45,9 @@ public class PitfallTrap extends Trap {
 	{
 		color = RED;
 		shape = DIAMOND;
+		isAoE = true;
+		isNearest = true;
+		avoidsHallways = true;
 	}
 
 	@Override

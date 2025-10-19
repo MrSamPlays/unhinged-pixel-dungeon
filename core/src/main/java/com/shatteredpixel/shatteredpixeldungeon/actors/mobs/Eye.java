@@ -62,7 +62,7 @@ public class Eye extends Mob {
 
 		HUNTING = new Hunting();
 		
-		loot = new Dewdrop();
+		loot = new Dewdrop().quantity(Random.NormalIntRange(1,5)); //eyes now drop more dew
 		lootChance = 1f;
 
 		properties.add(Property.DEMONIC);

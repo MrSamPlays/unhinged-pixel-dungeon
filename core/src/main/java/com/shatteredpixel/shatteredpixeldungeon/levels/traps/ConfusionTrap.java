@@ -36,6 +36,7 @@ public class ConfusionTrap extends Trap {
 	{
 		color = TEAL;
 		shape = GRILL;
+		isAoE = true;
 	}
 
 	@Override

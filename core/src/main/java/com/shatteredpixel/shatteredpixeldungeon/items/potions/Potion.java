@@ -531,18 +531,19 @@ public class Potion extends Item {
 			}
 			
 			if (seeds.size() == 1){
-				result.identify();
+                assert result != null;
+                result.identify();
 			}
-
-			while (result instanceof PotionOfHealing
-					&& Random.Int(10) < Dungeon.LimitedDrops.COOKING_HP.count) {
-
-				result = (Potion) Generator.randomUsingDefaults(Generator.Category.POTION);
-			}
-			
-			if (result instanceof PotionOfHealing) {
-				Dungeon.LimitedDrops.COOKING_HP.count++;
-			}
+			// removed cap on cooking healing potions.
+//			while (result instanceof PotionOfHealing
+//					&& Random.Int(10) < Dungeon.LimitedDrops.COOKING_HP.count) {
+//
+//				result = (Potion) Generator.randomUsingDefaults(Generator.Category.POTION);
+//			}
+//
+//			if (result instanceof PotionOfHealing) {
+//				Dungeon.LimitedDrops.COOKING_HP.count++;
+//			}
 			
 			return result;
 		}

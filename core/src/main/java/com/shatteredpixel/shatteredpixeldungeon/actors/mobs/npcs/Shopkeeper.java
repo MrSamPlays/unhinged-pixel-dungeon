@@ -320,6 +320,7 @@ public class Shopkeeper extends NPC {
 			case 16:
 				return Messages.get(this, "talk_city");
 			case 20:
+			case 21:
 				return Messages.get(this, "talk_halls");
 		}
 	}

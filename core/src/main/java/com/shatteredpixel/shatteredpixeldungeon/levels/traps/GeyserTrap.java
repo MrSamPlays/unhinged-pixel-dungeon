@@ -46,6 +46,9 @@ public class GeyserTrap extends Trap {
 	{
 		color = TEAL;
 		shape = DIAMOND;
+
+		// set to false to keep mobs from targeting it.
+		isAoE = true;
 	}
 
 	public int centerKnockBackDirection = -1;

@@ -204,7 +204,7 @@ public class Piranha extends Mob {
 	}
 
 	public static Piranha random(){
-		float altChance = 1/50f * RatSkull.exoticChanceMultiplier();
+		float altChance = 1/100f * RatSkull.exoticChanceMultiplier();
 		if (Random.Float() < altChance){
 			return new PhantomPiranha();
 		} else {

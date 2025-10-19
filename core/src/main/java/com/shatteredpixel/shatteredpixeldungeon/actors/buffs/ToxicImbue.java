@@ -39,7 +39,7 @@ public class ToxicImbue extends Buff {
 		announced = true;
 	}
 
-	public static final float DURATION	= 50f;
+	public static final float DURATION	= 100f;
 
 	protected float left;
 
@@ -83,7 +83,7 @@ public class ToxicImbue extends Buff {
 
 		spend(TICK);
 		left -= TICK;
-		if (left <= -5){
+		if (left <= -10){ // 10 grace turns of toxic gas immunity
 			detach();
 		}
 

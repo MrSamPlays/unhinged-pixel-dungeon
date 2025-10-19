@@ -149,6 +149,18 @@ public class Random {
 			return min + (int)(roll2*(max - min + 1));
 		}
 	}
+	// Like NormalIntRange(int, int) but skewed
+	public static int NormalIntRange( int min, int max , int avg) {
+		int out = min + (int) ((Float() + Float()) * avg);
+		if (out > max) {
+			out = max;
+		} else if (out < min) {
+			out = min;
+		}
+		return out;
+
+	}
+
 
 	//returns a uniformly distributed long in the range [-2^63, 2^63)
 	public static synchronized long Long() {

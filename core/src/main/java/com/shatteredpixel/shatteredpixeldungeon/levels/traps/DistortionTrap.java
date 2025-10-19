@@ -57,6 +57,8 @@ public class DistortionTrap extends Trap{
 	{
 		color = TEAL;
 		shape = LARGE_DOT;
+		isAoE = true;
+		isNearest = true;
 	}
 
 	private static final ArrayList<Class<?extends Mob>> RARE = new ArrayList<>(Arrays.asList(

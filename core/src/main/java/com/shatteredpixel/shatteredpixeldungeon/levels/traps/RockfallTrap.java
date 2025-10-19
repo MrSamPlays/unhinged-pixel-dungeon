@@ -49,7 +49,8 @@ public class RockfallTrap extends Trap {
 	{
 		color = GREY;
 		shape = DIAMOND;
-		
+
+		isAoE = true;
 		canBeHidden = false;
 		avoidsHallways = true;
 	}

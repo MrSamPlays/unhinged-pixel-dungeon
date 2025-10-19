@@ -30,6 +30,7 @@ public class WarpingTrap extends TeleportationTrap {
 	{
 		color = TEAL;
 		shape = STARS;
+		isAoE = true;
 	}
 
 	@Override

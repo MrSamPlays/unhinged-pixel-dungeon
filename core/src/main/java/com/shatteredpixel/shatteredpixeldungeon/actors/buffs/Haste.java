@@ -30,7 +30,7 @@ public class Haste extends FlavourBuff {
 		type = buffType.POSITIVE;
 	}
 	
-	public static final float DURATION	= 20f;
+	public static final float DURATION	= 50f;
 	
 	@Override
 	public int icon() {

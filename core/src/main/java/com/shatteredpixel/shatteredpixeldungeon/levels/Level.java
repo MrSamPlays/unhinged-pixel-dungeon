@@ -61,7 +61,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SacrificialParticle;
@@ -146,7 +145,7 @@ public abstract class Level implements Bundlable {
 	protected int height;
 	protected int length;
 	
-	protected static final float TIME_TO_RESPAWN	= 50;
+	protected static final float TIME_TO_RESPAWN	= 35;
 
 	public int version;
 	
@@ -165,6 +164,9 @@ public abstract class Level implements Bundlable {
 	public boolean[] secret;
 	public boolean[] solid;
 	public boolean[] avoid;
+
+	// trap_passable it's a union of trap spaces and passable spaces;
+	public boolean[] trap_passable;
 	public boolean[] water;
 	public boolean[] pit;
 
@@ -365,6 +367,7 @@ public abstract class Level implements Bundlable {
 		secret		= new boolean[length];
 		solid		= new boolean[length];
 		avoid		= new boolean[length];
+		trap_passable = new boolean[length];
 		water		= new boolean[length];
 		pit			= new boolean[length];
 
@@ -750,6 +753,7 @@ public abstract class Level implements Bundlable {
 		return respawner;
 	}
 
+	// mob spawns are more frequent now
 	public float respawnCooldown(){
 		float cooldown;
 		if (Statistics.amuletObtained){
@@ -865,6 +869,7 @@ public abstract class Level implements Bundlable {
 			secret[i]		= (flags & Terrain.SECRET) != 0;
 			solid[i]		= (flags & Terrain.SOLID) != 0;
 			avoid[i]		= (flags & Terrain.AVOID) != 0;
+			trap_passable[i]         = (flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0;
 			water[i]		= (flags & Terrain.LIQUID) != 0;
 			pit[i]			= (flags & Terrain.PIT) != 0;
 		}
@@ -875,15 +880,15 @@ public abstract class Level implements Bundlable {
 		
 		int lastRow = length() - width();
 		for (int i=0; i < width(); i++) {
-			passable[i] = avoid[i] = false;
+			passable[i] = avoid[i] = trap_passable[i] = false;
 			losBlocking[i] = solid[i] = true;
-			passable[lastRow + i] = avoid[lastRow + i] = false;
+			passable[lastRow + i] = avoid[lastRow + i] = trap_passable[i + 1] = false;
 			losBlocking[lastRow + i] = solid[lastRow + i] = true;
 		}
 		for (int i=width(); i < lastRow; i += width()) {
-			passable[i] = avoid[i] = false;
+			passable[i] = avoid[i] = trap_passable[i] = false;
 			losBlocking[i] = solid[i] = true;
-			passable[i + width()-1] = avoid[i + width()-1] = false;
+			passable[i + width()-1] = avoid[i + width()-1] = trap_passable[1 + width()-1] = false;
 			losBlocking[i + width()-1] = solid[i + width()-1] = true;
 		}
 
@@ -959,6 +964,7 @@ public abstract class Level implements Bundlable {
 		level.secret[cell]		    = (flags & Terrain.SECRET) != 0;
 		level.solid[cell]			= (flags & Terrain.SOLID) != 0;
 		level.avoid[cell]			= (flags & Terrain.AVOID) != 0;
+		level.trap_passable[cell]   = (flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0;
 		level.pit[cell]			    = (flags & Terrain.PIT) != 0;
 		level.water[cell]			= terrain == Terrain.WATER;
 

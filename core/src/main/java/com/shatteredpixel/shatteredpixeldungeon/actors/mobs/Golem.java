@@ -42,14 +42,14 @@ public class Golem extends Mob {
 	{
 		spriteClass = GolemSprite.class;
 		
-		HP = HT = 120;
-		defenseSkill = 15;
+		HP = HT = 150;
+		defenseSkill = 10;
 		
 		EXP = 12;
 		maxLvl = 22;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
-		lootChance = 0.2f; //initially, see lootChance()
+		lootChance = 0.6f; //initially, see lootChance()
 
 		properties.add(Property.INORGANIC);
 		properties.add(Property.LARGE);
@@ -60,12 +60,12 @@ public class Golem extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 25, 30 );
+		return Random.NormalIntRange( 20, 35 );
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 28;
+		return 20;
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public class Golem extends Mob {
 	public Item createLoot() {
 		Dungeon.LimitedDrops.GOLEM_EQUIP.count++;
 		//uses probability tables for demon halls
-		if (loot == Generator.Category.WEAPON){
+		if (loot == Generator.Category.WEAPON) {
 			return Generator.randomWeapon(5, true);
 		} else {
 			return Generator.randomArmor(5);

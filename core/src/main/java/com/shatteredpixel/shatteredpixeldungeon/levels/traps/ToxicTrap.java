@@ -36,6 +36,7 @@ public class ToxicTrap extends Trap{
 	{
 		color = GREEN;
 		shape = GRILL;
+		isAoE = true;
 	}
 
 	@Override

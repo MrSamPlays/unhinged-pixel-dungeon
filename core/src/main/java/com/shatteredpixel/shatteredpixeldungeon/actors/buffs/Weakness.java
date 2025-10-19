@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Weakness extends FlavourBuff {
 
-	public static final float DURATION = 20f;
+	public static final float DURATION = 30f;
 
 	{
 		type = buffType.NEGATIVE;

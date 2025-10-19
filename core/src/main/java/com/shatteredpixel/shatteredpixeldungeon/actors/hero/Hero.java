@@ -231,6 +231,7 @@ public class Hero extends Char {
 	public int exp = 0;
 	
 	public int HTBoost = 0;
+	public int HTBoostMult = 5;
 	
 	private ArrayList<Mob> visibleEnemies;
 
@@ -251,8 +252,8 @@ public class Hero extends Char {
 	
 	public void updateHT( boolean boostHP ){
 		int curHT = HT;
-		
-		HT = 20 + 5*(lvl-1) + HTBoost;
+		// elixir of might now grants a permanent boost to max health
+		HT = 20 + HTBoostMult*(lvl-1) + HTBoost;
 		float multiplier = RingOfMight.HTMultiplier(this);
 		HT = Math.round(multiplier * HT);
 		
@@ -2452,9 +2453,9 @@ public class Hero extends Char {
 						} else if (cursed) {
 							chance = 0f;
 							
-						//unintentional trap detection scales from 40% at floor 0 to 30% at floor 25
+						//unintentional trap detection scales from 75% at floor 0 to 50% at floor 25
 						} else if (Dungeon.level.map[curr] == Terrain.SECRET_TRAP) {
-							chance = 0.4f - (Dungeon.depth / 250f);
+							chance = 0.75f - (Dungeon.depth / 100f);
 							
 						//unintentional door detection scales from 20% at floor 0 to 0% at floor 20
 						} else {

@@ -38,6 +38,7 @@ public class StormTrap extends Trap {
 	{
 		color = YELLOW;
 		shape = STARS;
+		isAoE = true;
 	}
 	
 	@Override

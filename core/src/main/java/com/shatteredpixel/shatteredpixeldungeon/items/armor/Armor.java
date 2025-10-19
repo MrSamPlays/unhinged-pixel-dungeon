@@ -381,7 +381,7 @@ public class Armor extends EquipableItem {
 			return 1 + tier + lvl + augment.defenseFactor(lvl);
 		}
 
-		int max = tier * (2 + lvl) + augment.defenseFactor(lvl);
+		int max = tier * (4 + lvl) + augment.defenseFactor(lvl);
 		if (lvl > max){
 			return ((lvl - max)+1)/2;
 		} else {
@@ -419,7 +419,11 @@ public class Armor extends EquipableItem {
 		
 		if (owner instanceof Hero){
 			int aEnc = STRReq() - ((Hero) owner).STR();
-			if (aEnc > 0) evasion /= Math.pow(1.5, aEnc);
+			if (aEnc > 0) evasion /= (float) Math.pow(1.5f, aEnc);
+			else if (aEnc < 0){
+				// excess strength means increased evasion, but the benefit is not as much
+				evasion *= (float) Math.pow(1.105f, -aEnc);
+			}
 			
 			Momentum momentum = owner.buff(Momentum.class);
 			if (momentum != null){
@@ -435,6 +439,7 @@ public class Armor extends EquipableItem {
 		if (owner instanceof Hero) {
 			int aEnc = STRReq() - ((Hero) owner).STR();
 			if (aEnc > 0) speed /= Math.pow(1.2, aEnc);
+			else if (aEnc < 0) speed *= Math.pow(1.01, -aEnc); // excess strength makes you faster too!
 		}
 		
 		return speed;

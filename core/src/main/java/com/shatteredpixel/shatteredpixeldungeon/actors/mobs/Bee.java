@@ -27,6 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.BeeSprite;
@@ -45,7 +47,8 @@ public class Bee extends Mob {
 		
 		flying = true;
 		state = WANDERING;
-		
+		loot = ElixirOfHoneyedHealing.class;
+		lootChance = 0.05f;
 		//only applicable when the bee is charmed with elixir of honeyed healing
 		intelligentAlly = true;
 	}
@@ -83,6 +86,10 @@ public class Bee extends Mob {
 	@Override
 	public void die(Object cause) {
 		flying = false;
+		// if the hero killed the bee, the loot chance is 0.
+		if (cause instanceof Hero) {
+			lootChance = 0;
+		}
 		super.die(cause);
 	}
 	

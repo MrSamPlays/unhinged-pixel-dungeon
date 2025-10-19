@@ -66,6 +66,14 @@ public abstract class Trap implements Bundlable {
 	public boolean canBeHidden = true;
 	public boolean canBeSearched = true;
 
+
+	// if trap is aoe (ranged mobs will target)
+	public boolean isAoE = false;
+	// is trap to target nearest (ranged mobs will target if hero is closer)
+	public boolean isNearest = false;
+
+	public boolean mobStomp = true; // mobs stomp on traps
+
 	public boolean avoidsHallways = false; //whether this trap should avoid being placed in hallways
 
 	public Trap set(int pos){

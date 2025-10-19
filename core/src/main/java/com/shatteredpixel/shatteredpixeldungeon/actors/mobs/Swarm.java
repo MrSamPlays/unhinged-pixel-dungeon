@@ -51,7 +51,7 @@ public class Swarm extends Mob {
 		flying = true;
 
 		loot = PotionOfHealing.class;
-		lootChance = 0.1667f; //by default, see lootChance()
+		lootChance = 0.45f; //by default, see lootChance()
 	}
 	
 	private static final float SPLIT_DELAY	= 1f;
@@ -144,8 +144,8 @@ public class Swarm extends Mob {
 
 	@Override
 	public float lootChance() {
-		lootChance = 1f/(6 * (generation+1) );
-		return super.lootChance() * (5f - Dungeon.LimitedDrops.SWARM_HP.count) / 5f;
+		lootChance = 1f/(3 * (generation+1) );
+		return super.lootChance() * Math.max((15f - Dungeon.LimitedDrops.SWARM_HP.count) / 15f, 0.01f);
 	}
 	
 	@Override

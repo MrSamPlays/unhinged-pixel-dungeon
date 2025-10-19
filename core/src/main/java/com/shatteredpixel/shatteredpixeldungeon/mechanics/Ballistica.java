@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.mechanics;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,11 @@ public class Ballistica {
 	public static final int STOP_SOLID = 4;     //ballistica will stop on solid terrain
 	public static final int IGNORE_SOFT_SOLID = 8; //ballistica will ignore soft solid terrain, such as doors and webs
 
-	public static final int PROJECTILE =  	STOP_TARGET	| STOP_CHARS	| STOP_SOLID;
+	public static final int TRIGGER_TRAPS = 0x10; // ballistica will trigger any traps in its path
 
-	public static final int MAGIC_BOLT =    STOP_CHARS  | STOP_SOLID;
+	public static final int PROJECTILE =  	STOP_TARGET	| STOP_CHARS | STOP_SOLID;
+
+	public static final int MAGIC_BOLT =    STOP_CHARS  | STOP_SOLID | TRIGGER_TRAPS;
 
 	public static final int WONT_STOP =     0;
 
@@ -58,7 +61,8 @@ public class Ballistica {
 				(params & STOP_TARGET) > 0,
 				(params & STOP_CHARS) > 0,
 				(params & STOP_SOLID) > 0,
-				(params & IGNORE_SOFT_SOLID) > 0);
+				(params & IGNORE_SOFT_SOLID) > 0,
+				(params & TRIGGER_TRAPS) > 0);
 
 		if (collisionPos != null) {
 			dist = path.indexOf(collisionPos);
@@ -71,7 +75,7 @@ public class Ballistica {
 		}
 	}
 
-	private void build( int from, int to, boolean stopTarget, boolean stopChars, boolean stopTerrain, boolean ignoreSoftSolid ) {
+	private void build( int from, int to, boolean stopTarget, boolean stopChars, boolean stopTerrain, boolean ignoreSoftSolid, boolean triggerTraps ) {
 		int w = Dungeon.level.width();
 
 		int x0 = from % w;
@@ -129,7 +133,11 @@ public class Ballistica {
 
 			if (collisionPos == null && stopTerrain && cell != sourcePos && Dungeon.level.solid[cell]) {
 				if (ignoreSoftSolid && (Dungeon.level.passable[cell] || Dungeon.level.avoid[cell])) {
-					//do nothing
+					// do nothing unless the projectile can trigger traps
+					Trap t = Dungeon.level.traps.get(cell);
+					if (triggerTraps && t != null) {
+						t.trigger();
+					}
 				} else {
 					collide(cell);
 				}

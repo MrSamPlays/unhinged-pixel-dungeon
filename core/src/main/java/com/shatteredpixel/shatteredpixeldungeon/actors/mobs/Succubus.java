@@ -55,15 +55,15 @@ public class Succubus extends Mob {
 	{
 		spriteClass = SuccubusSprite.class;
 		
-		HP = HT = 80;
-		defenseSkill = 25;
+		HP = HT = 70;
+		defenseSkill = 30;
 		viewDistance = Light.DISTANCE;
 		
 		EXP = 12;
 		maxLvl = 25;
 		
 		loot = Generator.Category.SCROLL;
-		lootChance = 0.33f;
+		lootChance = 0.50f;
 
 		properties.add(Property.DEMONIC);
 	}
@@ -94,7 +94,7 @@ public class Succubus extends Mob {
 			if (Dungeon.level.heroFOV[pos]) {
 				Sample.INSTANCE.play( Assets.Sounds.CHARMS );
 			}
-		} else if (Random.Int( 3 ) == 0) {
+		} else if (Random.Float() < 0.4) {
 			Charm c = Buff.affect( enemy, Charm.class, Charm.DURATION/2f );
 			c.object = id();
 			c.ignoreNextHit = true; //so that the -5 duration from succubus hit is ignored
@@ -172,9 +172,10 @@ public class Succubus extends Mob {
 	@Override
 	public Item createLoot() {
 		Class<?extends Scroll> loot;
-		do{
-			loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
-		} while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
+		// succubi can now drop scrolls of identify and upgrade
+		// do{
+		loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
+		// } while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
 
 		return Reflection.newInstance(loot);
 	}

@@ -47,6 +47,7 @@ public class ElixirOfMight extends Elixir {
 	
 	@Override
 	public void apply( Hero hero ) {
+		// elixir of might will now give a permanent boost as well as a temporary boost
 		identify();
 		
 		hero.STR++;
@@ -55,7 +56,7 @@ public class ElixirOfMight extends Elixir {
 		Buff.affect(hero, HTBoost.class).reset();
 		HTBoost boost = Buff.affect(hero, HTBoost.class);
 		boost.reset();
-		
+		hero.HTBoostMult++;
 		hero.updateHT( true );
 		GLog.p( Messages.get(this, "msg", hero.STR()) );
 
@@ -73,7 +74,7 @@ public class ElixirOfMight extends Elixir {
 			inputs =  new Class[]{PotionOfStrength.class};
 			inQuantity = new int[]{1};
 			
-			cost = 16;
+			cost = 20;
 			
 			output = ElixirOfMight.class;
 			outQuantity = 1;

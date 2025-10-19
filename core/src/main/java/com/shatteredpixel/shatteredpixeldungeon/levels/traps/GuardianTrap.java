@@ -40,6 +40,7 @@ public class GuardianTrap extends Trap {
 	{
 		color = RED;
 		shape = STARS;
+		isAoE = true;
 	}
 
 	@Override

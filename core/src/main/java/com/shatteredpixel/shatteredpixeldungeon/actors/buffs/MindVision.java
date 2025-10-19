@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class MindVision extends FlavourBuff {
 
-	public static final float DURATION = 20f;
+	public static final float DURATION = 50f;
 	
 	public int distance = 3;
 

@@ -40,8 +40,8 @@ public class SummoningTrap extends Trap {
 	{
 		color = TEAL;
 		shape = WAVES;
+		isAoE = true;
 	}
-
 	@Override
 	public void activate() {
 

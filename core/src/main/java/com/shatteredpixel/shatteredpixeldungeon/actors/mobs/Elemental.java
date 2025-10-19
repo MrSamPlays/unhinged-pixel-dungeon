@@ -229,7 +229,7 @@ public abstract class Elemental extends Mob {
 			spriteClass = ElementalSprite.Fire.class;
 			
 			loot = PotionOfLiquidFlame.class;
-			lootChance = 1/8f;
+			lootChance = 3/8f;
 			
 			properties.add( Property.FIERY );
 			
@@ -480,7 +480,7 @@ public abstract class Elemental extends Mob {
 			spriteClass = ElementalSprite.Frost.class;
 			
 			loot = PotionOfFrost.class;
-			lootChance = 1/8f;
+			lootChance = 1/4f;
 			
 			properties.add( Property.ICY );
 			

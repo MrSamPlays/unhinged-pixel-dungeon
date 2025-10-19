@@ -49,6 +49,7 @@ public class PoisonDartTrap extends Trap {
 		
 		canBeHidden = false;
 		avoidsHallways = true;
+		isNearest = true;
 	}
 	
 	protected int poisonAmount(){

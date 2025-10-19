@@ -95,7 +95,7 @@ public class PrisonLevel extends RegularLevel {
 	protected int standardRooms(boolean forceMax) {
 		if (forceMax) return 20;
 		//8 to 15, average 7
-		return 8+Random.chances(new float[]{1, 1, 8 ,4,1,2, 1, 2, 1});
+		return 8+Random.chances(new float[]{1, 1, 8 ,4,1,2, 1, 2});
 	}
 	
 	@Override
@@ -241,7 +241,8 @@ public class PrisonLevel extends RegularLevel {
 		
 		@Override
 		public void update() {
-			if (visible = (pos < Dungeon.level.heroFOV.length && Dungeon.level.heroFOV[pos])) {
+			visible = (pos < Dungeon.level.heroFOV.length && Dungeon.level.heroFOV[pos]);
+			if (visible) {
 				super.update();
 			}
 		}

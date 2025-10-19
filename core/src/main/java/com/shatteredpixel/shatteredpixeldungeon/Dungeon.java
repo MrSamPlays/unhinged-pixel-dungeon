@@ -424,7 +424,7 @@ public class Dungeon {
 	}
 	
 	public static boolean shopOnLevel() {
-		return depth == 6 || depth == 11 || depth == 16;
+		return depth == 6 || depth == 11 || depth == 16 || depth == 21;
 	}
 	
 	public static boolean bossLevel() {
@@ -580,7 +580,7 @@ public class Dungeon {
 	}
 
 	public static boolean labRoomNeeded(){
-		//one laboratory each floor set, in floor 3 or 4, 1/2 chance each floor
+		//two laboratories each floor set, in floor 3 or 4, 1/2 chance each floor
 		if (Dungeon.depth == 1) {
 			// first floor never contains a lab
 			return false;

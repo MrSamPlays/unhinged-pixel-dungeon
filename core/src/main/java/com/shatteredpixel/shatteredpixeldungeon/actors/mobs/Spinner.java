@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SpinnerSprite;
@@ -166,10 +167,13 @@ public class Spinner extends Mob {
 
 		int webPos = b.path.get( collisionIndex+1 );
 
-		//ensure we aren't shooting the web through walls
+		//ensure we aren't shooting the web through
 		int projectilePos = new Ballistica( pos, webPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID).collisionPos;
 		
-		if (webPos != enemy.pos && projectilePos == webPos && Dungeon.level.passable[webPos]){
+		if (webPos != enemy.pos && projectilePos == webPos && Dungeon.level.trap_passable[webPos]){
+			// activate trap if web lands on trap
+			Trap t = Dungeon.level.traps.get(webPos);
+			if (t != null) t.trigger();
 			return webPos;
 		} else {
 			return -1;
@@ -191,9 +195,9 @@ public class Spinner extends Mob {
 			int leftPos = enemy.pos + PathFinder.CIRCLE8[left(i)];
 			int rightPos = enemy.pos + PathFinder.CIRCLE8[right(i)];
 			
-			if (Dungeon.level.passable[leftPos]) applyWebToCell(leftPos);
-			if (Dungeon.level.passable[webPos])  applyWebToCell(webPos);
-			if (Dungeon.level.passable[rightPos])applyWebToCell(rightPos);
+			if (Dungeon.level.trap_passable[leftPos]) applyWebToCell(leftPos);
+			if (Dungeon.level.trap_passable[webPos])  applyWebToCell(webPos);
+			if (Dungeon.level.trap_passable[rightPos])applyWebToCell(rightPos);
 			
 			webCoolDown = 10;
 

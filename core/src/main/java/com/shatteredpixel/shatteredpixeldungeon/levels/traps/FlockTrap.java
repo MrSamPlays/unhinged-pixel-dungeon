@@ -42,6 +42,7 @@ public class FlockTrap extends Trap {
 	{
 		color = WHITE;
 		shape = WAVES;
+		isAoE = true;
 	}
 
 

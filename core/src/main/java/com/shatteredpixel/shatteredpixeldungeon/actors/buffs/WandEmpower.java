@@ -81,5 +81,4 @@ public class WandEmpower extends Buff {
 		dmgBoost = bundle.getInt( BOOST );
 		left = bundle.getInt( LEFT );
 	}
-
 }

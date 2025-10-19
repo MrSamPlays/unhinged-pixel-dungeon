@@ -41,6 +41,7 @@ public class FlashingTrap extends Trap {
 
 		disarmedByActivation = false;
 		avoidsHallways = true;
+		isAoE = true;
 	}
 
 	@Override

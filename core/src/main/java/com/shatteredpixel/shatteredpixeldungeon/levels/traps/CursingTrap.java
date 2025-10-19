@@ -46,6 +46,7 @@ public class CursingTrap extends Trap {
 	{
 		color = VIOLET;
 		shape = WAVES;
+		isNearest = true;
 	}
 
 	@Override

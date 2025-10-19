@@ -39,6 +39,7 @@ public class FrostTrap extends Trap {
 	{
 		color = WHITE;
 		shape = STARS;
+		isAoE = true;
 	}
 
 	@Override

@@ -35,6 +35,7 @@ public class OozeTrap extends Trap {
 	{
 		color = GREEN;
 		shape = DOTS;
+		isAoE = true;
 	}
 
 	@Override

@@ -35,8 +35,8 @@ public class Slime extends Mob {
 	{
 		spriteClass = SlimeSprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 5;
+		HP = HT = 30;
+		defenseSkill = 7;
 		
 		EXP = 4;
 		maxLvl = 9;
@@ -70,14 +70,14 @@ public class Slime extends Mob {
 	public float lootChance(){
 		//each drop makes future drops 1/4 as likely
 		// so loot chance looks like: 1/5, 1/20, 1/80, 1/320, etc.
-		return super.lootChance() * (float)Math.pow(1/4f, Dungeon.LimitedDrops.SLIME_WEP.count);
+		return super.lootChance() * (float)Math.max(Math.pow(3/4f, Dungeon.LimitedDrops.SLIME_WEP.count),0.015);
 	}
 	
 	@Override
 	public Item createLoot() {
 		Dungeon.LimitedDrops.SLIME_WEP.count++;
 		Generator.Category c = Generator.Category.WEP_T2;
-		MeleeWeapon w = (MeleeWeapon)Generator.randomUsingDefaults(Generator.Category.WEP_T2);
+		MeleeWeapon w = (MeleeWeapon)Generator.randomUsingDefaults(c);
 		w.level(0);
 		return w;
 	}

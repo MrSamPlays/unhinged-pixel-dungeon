@@ -21,8 +21,26 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Gnoll;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollExile;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Guard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shaman;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Skeleton;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Slime;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Swarm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -50,6 +68,31 @@ public class Lucky extends Weapon.Enchantment {
 			//default is -5: 80% common, 20% uncommon, 0% rare
 			//ring level increases by 1 for each 20% above 100% proc rate
 			Buff.affect(defender, LuckProc.class).ringLevel = -10 + Math.round(5*powerMulti);
+			// Lucky weapon procs have a further reduced chance of resetting limited drops from mobs;
+			if (Random.Float() < 2 * procChance) {
+				if (defender instanceof Bat)
+					Dungeon.LimitedDrops.BAT_HP.count = 0;
+				else if (defender instanceof Swarm)
+					Dungeon.LimitedDrops.SWARM_HP.count = 0;
+				else if (defender instanceof DM200)
+					Dungeon.LimitedDrops.DM200_EQUIP.count = 0;
+				else if (defender instanceof Golem)
+					Dungeon.LimitedDrops.GOLEM_EQUIP.count = 0;
+				else if (defender instanceof Necromancer)
+					Dungeon.LimitedDrops.NECRO_HP.count = 0;
+				else if (defender instanceof Guard)
+					Dungeon.LimitedDrops.GUARD_ARM.count = 0;
+				else if (defender instanceof Warlock)
+					Dungeon.LimitedDrops.WARLOCK_HP.count = 0;
+				else if (defender instanceof Shaman) // gnoll shaman
+					Dungeon.LimitedDrops.SHAMAN_WAND.count = 0;
+				else if (defender instanceof Skeleton)
+					Dungeon.LimitedDrops.SKELE_WEP.count = 0;
+				else if (defender instanceof Slime)
+					Dungeon.LimitedDrops.SLIME_WEP.count = 0;
+				else if (defender instanceof Thief)
+					Dungeon.LimitedDrops.THEIF_MISC.count = 0;
+			}
 		} else {
 			//in rare cases where we attack many times at once (e.g. gladiator fury)
 			// make sure that failed luck procs override prior succeeded ones

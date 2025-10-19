@@ -410,7 +410,18 @@ public class PathFinder {
 			}
 		}
 	}
-	
+	// helper function to allow mobs to pathfind over traps helper function (make it a little dumber) componentwise or (todo make this more efficient)
+	//  combine passable and avoid maps so mobs can trigger traps
+	public static boolean[] or(final boolean[] first, final boolean[] second) {
+		boolean[] out = new boolean[first.length];
+		if (first.length == second.length) {
+			for (int i = 0; i < first.length; i++) {
+				out[i] = first[i] || second[i];
+			}
+			return out;
+		}
+		return null;
+	}
 	@SuppressWarnings("serial")
 	public static class Path extends LinkedList<Integer> {
 	}

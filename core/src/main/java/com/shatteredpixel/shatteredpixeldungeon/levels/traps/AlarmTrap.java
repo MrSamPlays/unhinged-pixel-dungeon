@@ -35,6 +35,8 @@ public class AlarmTrap extends Trap {
 	{
 		color = RED;
 		shape = DOTS;
+		isAoE = true;
+		isNearest = true;
 	}
 
 	@Override
