@@ -72,8 +72,6 @@ public abstract class Trap implements Bundlable {
 	// is trap to target nearest (ranged mobs will target if hero is closer)
 	public boolean isNearest = false;
 
-	public boolean mobStomp = true; // mobs stomp on traps
-
 	public boolean avoidsHallways = false; //whether this trap should avoid being placed in hallways
 
 	public Trap set(int pos){

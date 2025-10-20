@@ -48,6 +48,7 @@ public class GatewayTrap extends Trap {
 
 		disarmedByActivation = false;
 		avoidsHallways = true;
+		isNearest = true;
 	}
 
 	private int telePos = -1;

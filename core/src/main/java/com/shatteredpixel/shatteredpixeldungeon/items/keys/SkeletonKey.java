@@ -49,22 +49,23 @@ public class SkeletonKey extends Key {
 
 	@Override
 	public boolean doPickUp(Hero hero, int pos) {
-		if(!SPDSettings.supportNagged()){
-			try {
-				Dungeon.saveAll();
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						ShatteredPixelDungeon.scene().add(new WndSupportPrompt());
-					}
-				});
-			} catch (IOException e) {
-				ShatteredPixelDungeon.reportException(e);
-			}
-			
-		}
+		// No Evan, I'm not donating to you lol, although I should honestly.
+		// Thank you 00-Evan for motivating me to get into modding :)
+//		if(!SPDSettings.supportNagged()){
+//			try {
+//				Dungeon.saveAll();
+//				Game.runOnRenderThread(new Callback() {
+//					@Override
+//					public void call() {
+//						ShatteredPixelDungeon.scene().add(new WndSupportPrompt());
+//					}
+//				});
+//			} catch (IOException e) {
+//				ShatteredPixelDungeon.reportException(e);
+//			}
+//
+//		}
 		
 		return super.doPickUp(hero, pos);
 	}
-
 }

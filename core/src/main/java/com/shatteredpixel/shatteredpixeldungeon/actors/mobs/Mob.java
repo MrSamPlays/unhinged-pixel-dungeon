@@ -83,6 +83,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.AlarmTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
@@ -553,8 +554,7 @@ public abstract class Mob extends Char {
             for (int i : PathFinder.NEIGHBOURS8) {
                 Trap t = Dungeon.level.traps.get(pos + i);
                 if (t != null && !t.visible) {
-                    t.reveal();
-                    GameScene.updateMap(pos + i);
+                    Dungeon.level.discover(pos + i);
                 }
             }
             boolean newPath = false;

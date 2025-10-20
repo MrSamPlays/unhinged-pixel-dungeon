@@ -869,7 +869,7 @@ public abstract class Level implements Bundlable {
 			secret[i]		= (flags & Terrain.SECRET) != 0;
 			solid[i]		= (flags & Terrain.SOLID) != 0;
 			avoid[i]		= (flags & Terrain.AVOID) != 0;
-			trap_passable[i]         = (flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0;
+			trap_passable[i]         = ((flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0) && (flags & (Terrain.PIT)) == 0;
 			water[i]		= (flags & Terrain.LIQUID) != 0;
 			pit[i]			= (flags & Terrain.PIT) != 0;
 		}
@@ -888,7 +888,7 @@ public abstract class Level implements Bundlable {
 		for (int i=width(); i < lastRow; i += width()) {
 			passable[i] = avoid[i] = trap_passable[i] = false;
 			losBlocking[i] = solid[i] = true;
-			passable[i + width()-1] = avoid[i + width()-1] = trap_passable[1 + width()-1] = false;
+			passable[i + width()-1] = avoid[i + width()-1] = trap_passable[i + width()-1] = false;
 			losBlocking[i + width()-1] = solid[i + width()-1] = true;
 		}
 

@@ -63,8 +63,23 @@ public class AboutScene extends PixelScene {
 
 		Component content = list.content();
 		content.clear();
+		//*** Unhinged Pixel Dungeon Credits ***
+		final int SAM_COLOR = 0xffd400;
+		CreditsBlock uhpd = new CreditsBlock(true, SAM_COLOR,
+				"Unhinged Pixel Dungeon",
+				Icons.SHPX.get(), // TODO Replace with custom icon
+				"Developed by: _Sam_\n Based on Shattered Pixel Dungeon's open source",
+				"https://github.com/MrSamPlays/unhinged-pixel-dungeon",
+				"https://github.com/MrSamPlays/unhinged-pixel-dungeon");
+		if (landscape()){
+			uhpd.setRect((w - fullWidth/2f)/2f - 6, insets.top + 10, 120, 0);
+		} else {
+			uhpd.setRect((w - fullWidth/2f)/2f, insets.top + 6, 120, 0);
+		}
+		content.add(uhpd);
 
 		//*** Shattered Pixel Dungeon Credits ***
+
 
 		CreditsBlock shpx = new CreditsBlock(true, Window.SHPX_COLOR,
 				"Shattered Pixel Dungeon",
@@ -73,9 +88,9 @@ public class AboutScene extends PixelScene {
 				"ShatteredPixel.com",
 				"https://ShatteredPixel.com");
 		if (landscape()){
-			shpx.setRect((w - fullWidth)/2f - 6, insets.top + 10, 120, 0);
+			shpx.setRect((w - fullWidth)/2f - 6, uhpd.bottom() + 10, 120, 0);
 		} else {
-			shpx.setRect((w - fullWidth)/2f, insets.top + 6, 120, 0);
+			shpx.setRect((w - fullWidth)/2f, uhpd.bottom() + 6, 120, 0);
 		}
 		content.add(shpx);
 
