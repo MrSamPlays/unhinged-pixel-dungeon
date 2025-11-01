@@ -82,7 +82,8 @@ public class CavesLevel extends RegularLevel {
 		if (Statistics.amuletObtained){
 			Music.INSTANCE.play(Assets.Music.CAVES_TENSE, true);
 		} else {
-			Music.INSTANCE.playTracks(CAVES_TRACK_LIST, CAVES_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(CAVES_TRACK_LIST, CAVES_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.CAVES_UHPD, true);
 		}
 	}
 

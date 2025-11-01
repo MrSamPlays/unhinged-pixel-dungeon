@@ -183,8 +183,8 @@ public class DesktopLauncher {
 		DesktopWindowListener listener = new DesktopWindowListener();
 		config.setWindowListener( listener );
 		
-		config.setWindowIcon("icons/icon_16.png", "icons/icon_32.png", "icons/icon_48.png",
-				"icons/icon_64.png", "icons/icon_128.png", "icons/icon_256.png");
+		config.setWindowIcon("icons/icon_16_uhpd.png", "icons/icon_32_uhpd.png", "icons/icon_48_uhpd.png",
+				"icons/icon_64_uhpd.png", "icons/icon_128_uhpd.png", "icons/icon_256_uhpd.png");
 
 		new Lwjgl3Application(new ShatteredPixelDungeon(new DesktopPlatformSupport()), config);
 	}

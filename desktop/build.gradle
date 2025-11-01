@@ -74,7 +74,7 @@ runtime {
             javaHome = file("./build/jdks/win/jdk-16.0.1+9").getAbsolutePath()
             jpackage {
                 jpackageHome = file("./build/jdks/win/jdk-16.0.1+9")
-                imageOptions = ["--icon", file("./src/main/assets/icons/windows.ico"),
+                imageOptions = ["--icon", file("./src/main/assets/icons/windows_uhpd.ico"),
                                 "--java-options", "-XX:+IgnoreUnrecognizedVMOptions"]
             }
         }

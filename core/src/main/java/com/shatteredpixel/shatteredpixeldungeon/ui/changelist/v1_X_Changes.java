@@ -355,7 +355,7 @@ public class v1_X_Changes {
 		changes.hardlight(CharSprite.WARNING);
 		changeInfos.add(changes);
 
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.EXOTIC_ODAL), Messages.get(ScrollOfMetamorphosis.class, "name"),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.EXOTIC_FLRYN), Messages.get(ScrollOfMetamorphosis.class, "name"),
 				"The scroll of metamorphosis has been adjusted to allow more of the game's talents to work with its effect.\n\n" +
 				"Several talents that were previously exempt from being chosen by the scroll now have alternative effects that let them be used by any hero.\n\n" +
 				"These alternative effects only appear when getting these talents via metamorphosis."));

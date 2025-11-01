@@ -94,7 +94,8 @@ public class PrisonBossLevel extends Level {
 		if (state == State.START){
 			Music.INSTANCE.end();
 		} else if (state == State.WON) {
-			Music.INSTANCE.playTracks(PrisonLevel.PRISON_TRACK_LIST, PrisonLevel.PRISON_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(PrisonLevel.PRISON_TRACK_LIST, PrisonLevel.PRISON_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.PRISON_UHPD, false);
 		} else {
 			Music.INSTANCE.play(Assets.Music.PRISON_BOSS, true);
 		}
@@ -459,7 +460,7 @@ public class PrisonBossLevel extends Level {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						Music.INSTANCE.play(Assets.Music.PRISON_BOSS, true);
+						Music.INSTANCE.play(Assets.Music.PRISON_BOSS_PH1, true);
 					}
 				});
 				break;
@@ -505,6 +506,7 @@ public class PrisonBossLevel extends Level {
 				Sample.INSTANCE.play(Assets.Sounds.BLAST);
 				
 				state = State.FIGHT_ARENA;
+				Music.INSTANCE.play(Assets.Music.PRISON_BOSS_PH2, true);
 				break;
 				
 			case FIGHT_ARENA:

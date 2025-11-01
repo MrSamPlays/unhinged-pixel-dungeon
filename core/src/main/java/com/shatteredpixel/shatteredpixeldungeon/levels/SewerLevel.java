@@ -80,7 +80,8 @@ public class SewerLevel extends RegularLevel {
 				Music.INSTANCE.play(Assets.Music.SEWERS_TENSE, true);
 			}
 		} else {
-			Music.INSTANCE.playTracks(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false); // Default
+			Music.INSTANCE.play(Assets.Music.SEWERS_UHPD, true); // Unhinged
 		}
 	}
 	

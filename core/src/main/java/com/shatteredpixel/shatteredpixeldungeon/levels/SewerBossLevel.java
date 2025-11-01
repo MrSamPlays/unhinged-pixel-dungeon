@@ -57,26 +57,45 @@ public class SewerBossLevel extends SewerLevel {
 		color1 = 0x48763c;
 		color2 = 0x59994a;
 	}
-	
+	private boolean finalPhase = false;
 	@Override
 	public void playLevelMusic() {
-		if (locked){
-			Music.INSTANCE.play(Assets.Music.SEWERS_BOSS, true);
-			return;
-		}
-
 		boolean gooAlive = false;
-		for (Mob m : mobs){
+		Mob goo = null;
+
+		for (Mob m : mobs) {
 			if (m instanceof Goo) {
+				goo = m;
 				gooAlive = true;
 				break;
 			}
 		}
 
+		if (locked){
+
+			if (goo != null) {
+				if (goo.HP*2 <= goo.HT) {
+					finalPhase = true;
+				} else {
+					finalPhase = false;
+				}
+			}
+			if (finalPhase) {
+				Music.INSTANCE.play(Assets.Music.SEWERS_BOSS_ENRAGED_UHPD, true);
+			} else {
+				Music.INSTANCE.play(Assets.Music.SEWERS_BOSS_UHPD, true);
+			}
+			return;
+		}
+
+
+
+
 		if (gooAlive){
 			Music.INSTANCE.end();
 		} else {
-			Music.INSTANCE.playTracks(SewerLevel.SEWER_TRACK_LIST, SewerLevel.SEWER_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(SewerLevel.SEWER_TRACK_LIST, SewerLevel.SEWER_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.SEWERS_UHPD, true);
 		}
 
 	}
@@ -188,7 +207,7 @@ public class SewerBossLevel extends SewerLevel {
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					Music.INSTANCE.play(Assets.Music.SEWERS_BOSS, true);
+					Music.INSTANCE.play(Assets.Music.SEWERS_BOSS_UHPD, true);
 				}
 			});
 		}

@@ -1,6 +1,6 @@
 # Unhinged Pixel Dungeon
 
-Unhinged Pixel Dungeon is an open-source dungeon crawler based off of  [Shattered Pixel Dungeon](https://shatteredpixel.com/shatteredpd/) which is based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://watabou.itch.io/).
+Unhinged Pixel Dungeon is an open-source dungeon crawler based off of [Shattered Pixel Dungeon](https://shatteredpixel.com/shatteredpd/) which is based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://watabou.itch.io/).
 
 ## What's changed from Shattered?
 - More and Larger rooms per floor (significantly larger rooms) An average floor is much larger than Shattered's Large Room floors.

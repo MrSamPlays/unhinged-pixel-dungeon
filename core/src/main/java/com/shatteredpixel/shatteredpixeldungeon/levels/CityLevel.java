@@ -71,7 +71,8 @@ public class CityLevel extends RegularLevel {
 		if (Statistics.amuletObtained){
 			Music.INSTANCE.play(Assets.Music.CITY_TENSE, true);
 		} else {
-			Music.INSTANCE.playTracks(CITY_TRACK_LIST, CITY_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(CITY_TRACK_LIST, CITY_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.CITY_UHPD, true);
 		}
 	}
 

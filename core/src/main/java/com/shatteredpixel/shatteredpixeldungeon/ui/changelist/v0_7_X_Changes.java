@@ -891,7 +891,7 @@ public class v0_7_X_Changes {
 		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_KAUNAN, null), new ScrollOfTeleportation().trueName(),
 				"The scroll of teleportation has been buffed. It now prioritizes sending the user to rooms they have not seen yet, and can teleport to secret rooms."));
 		
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_ODAL, null), new ScrollOfMirrorImage().trueName(),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_FLRYN, null), new ScrollOfMirrorImage().trueName(),
 				"Scroll of mirror image has been adjusted to have more interactions with other items, but to also be less powerful at base:\n\n" +
 				"_-_ Scroll now spawns 2 images, down from 3\n\n" +
 				"_-_ Mirror images now attack with the hero's weapon, at 50% damage\n\n" +

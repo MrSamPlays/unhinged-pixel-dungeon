@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -85,6 +86,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrapMechanism;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.HeavyBoomerang;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
@@ -98,6 +100,7 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
+import com.shatteredpixel.shatteredpixeldungeon.services.updates.Updates;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -146,6 +149,7 @@ public abstract class Level implements Bundlable {
 	protected int length;
 	
 	protected static final float TIME_TO_RESPAWN	= 35;
+	protected static final float MIN_EVO_FACTOR = 0.01f;
 
 	public int version;
 	
@@ -198,6 +202,8 @@ public abstract class Level implements Bundlable {
 	public int color1 = 0x004400;
 	public int color2 = 0x88CC44;
 
+	public float evo_factor = 1f;
+
 	private static final String VERSION     = "version";
 	private static final String WIDTH       = "width";
 	private static final String HEIGHT      = "height";
@@ -215,15 +221,17 @@ public abstract class Level implements Bundlable {
 	private static final String BLOBS		= "blobs";
 	private static final String FEELING		= "feeling";
 
+	private static final String EVOLUTION = "evoFactor";
+
 	public void create() {
 
 		Random.pushGenerator( Dungeon.seedCurDepth() );
 
 		//TODO maybe just make this part of RegularLevel?
 		if (!Dungeon.bossLevel() && Dungeon.branch == 0) {
-			int foodToGenerate = Random.Int(1,10);
+			int foodToGenerate = Random.Int(1,5);
 			for (int i=0; i<foodToGenerate; i++) {
-				// now we'll generate up to 9 food, but one food per floor is at least guaranteed.
+				// now we'll generate up to 5 food since rats drop food, but one food per floor is at least guaranteed.
 				addItemToSpawn(Generator.random(Generator.Category.FOOD));
 			}
 
@@ -481,7 +489,7 @@ public abstract class Level implements Bundlable {
 		if (bundle.contains( "respawner" )){
 			respawner = (MobSpawner) bundle.get("respawner");
 		}
-
+		evo_factor = bundle.getFloat(EVOLUTION);
 		buildFlagMaps();
 		cleanWalls();
 
@@ -507,6 +515,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( FEELING, feeling );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
+		bundle.put(EVOLUTION, evo_factor);
 	}
 	
 	public int tunnelTile() {
@@ -567,6 +576,29 @@ public abstract class Level implements Bundlable {
 		return 0;
 	}
 
+	// logic to update evo_factor
+	public void updateEvoFactor(Object reason) {
+		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
+		// Evo factor is unaffected when inside a quest zone
+		if (reason instanceof LevelTransition || Dungeon.branch != 0) {
+			evo_factor = 1f;
+			return;
+		}
+		if (reason == null) {
+			evo_factor -= 0.0001f;
+		}
+		// triggering traps also increases evolution
+		if (reason instanceof Trap) {
+			evo_factor -= 0.0002f;
+		}
+		// hero killing mobs increases spawn rate more
+		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
+			evo_factor -= 0.0075f;
+		}
+		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
+		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
+		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
+	}
 	public LevelTransition getTransition(LevelTransition.Type type){
 		if (transitions.isEmpty()){
 			return null;
@@ -609,6 +641,7 @@ public abstract class Level implements Bundlable {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
 		Game.switchScene(InterlevelScene.class);
+		updateEvoFactor(transition);
 		return true;
 	}
 
@@ -754,6 +787,7 @@ public abstract class Level implements Bundlable {
 	}
 
 	// mob spawns are more frequent now
+	// TODO new mechanic to increase spawn rate if you stay on the same floor too long.
 	public float respawnCooldown(){
 		float cooldown;
 		if (Statistics.amuletObtained){
@@ -769,7 +803,9 @@ public abstract class Level implements Bundlable {
 		} else {
 			cooldown = TIME_TO_RESPAWN;
 		}
-		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime();
+		// time factor
+		updateEvoFactor(null);
+		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime() * evo_factor;
 	}
 
 	public boolean spawnMob(int disLimit){

@@ -75,7 +75,8 @@ public class PrisonLevel extends RegularLevel {
 		if (Wandmaker.Quest.active() || Statistics.amuletObtained){
 			Music.INSTANCE.play(Assets.Music.PRISON_TENSE, true);
 		} else {
-			Music.INSTANCE.playTracks(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(PRISON_TRACK_LIST, PRISON_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.PRISON_UHPD, true);
 		}
 		wandmakerQuestWasActive = Wandmaker.Quest.active();
 	}

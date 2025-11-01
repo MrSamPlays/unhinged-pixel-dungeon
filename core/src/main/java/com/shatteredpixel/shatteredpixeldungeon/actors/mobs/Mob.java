@@ -969,6 +969,7 @@ public abstract class Mob extends Char {
                 }
             }
         }
+        Dungeon.level.updateEvoFactor(cause);
     }
 
     public float lootChance() {

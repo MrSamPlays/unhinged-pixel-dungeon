@@ -828,10 +828,11 @@ public class Hero extends Char {
 	
 	@Override
 	public boolean act() {
-		
+
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
-
+		// time
+		Dungeon.level.updateEvoFactor(null);
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();
 		}
@@ -940,7 +941,7 @@ public class Hero extends Char {
 		canSelfTrample = true;
 
 		AttackIndicator.updateState();
-		
+
 		GameScene.ready();
 	}
 	
@@ -2457,9 +2458,9 @@ public class Hero extends Char {
 						} else if (Dungeon.level.map[curr] == Terrain.SECRET_TRAP) {
 							chance = 0.75f - (Dungeon.depth / 100f);
 							
-						//unintentional door detection scales from 20% at floor 0 to 0% at floor 20
+						//unintentional door detection scales from 40% at floor 20 to 0% at floor 20
 						} else {
-							chance = 0.2f - (Dungeon.depth / 100f);
+							chance = 0.4f - (Dungeon.depth / 100f);
 						}
 
 						//don't want to let the player search though hidden doors in tutorial

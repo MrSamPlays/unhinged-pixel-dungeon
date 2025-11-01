@@ -111,33 +111,46 @@ public class Assets {
 	}
 
 	public static class Music {
-		public static final String THEME_1              = "music/theme_1.ogg";
-		public static final String THEME_2              = "music/theme_2.ogg";
-		public static final String THEME_FINALE         = "music/theme_finale.ogg";
+		public static final String THEME_1              = "music/theme_1_uhpd.ogg";
+		public static final String THEME_2              = "music/theme_2_uhpd.ogg";
+		public static final String THEME_FINALE         = "music/theme_finale_uhpd.ogg";
 
 		public static final String SEWERS_1             = "music/sewers_1.ogg";
+
+		// future sewers music
+		public static final String SEWERS_UHPD 				= "music/sewers_uhpd.ogg";
 		public static final String SEWERS_2             = "music/sewers_2.ogg";
 		public static final String SEWERS_3             = "music/sewers_3.ogg";
-		public static final String SEWERS_TENSE         = "music/sewers_tense.ogg";
+		public static final String SEWERS_TENSE         = "music/sewers_tense_uhpd.ogg";
 		public static final String SEWERS_BOSS          = "music/sewers_boss.ogg";
+		public static final String SEWERS_BOSS_UHPD 	= "music/sewers_boss_uhpd.ogg";
+		public static final String SEWERS_BOSS_ENRAGED_UHPD 	= "music/sewers_boss_enraged_uhpd.ogg";
 
 		public static final String PRISON_1             = "music/prison_1.ogg";
 		public static final String PRISON_2             = "music/prison_2.ogg";
 		public static final String PRISON_3             = "music/prison_3.ogg";
-		public static final String PRISON_TENSE         = "music/prison_tense.ogg";
+		public static final String PRISON_UHPD             = "music/prison_1_uhpd.ogg";
+		public static final String PRISON_TENSE         = "music/prison_tense_uhpd.ogg";
 		public static final String PRISON_BOSS          = "music/prison_boss.ogg";
+		public static final String PRISON_BOSS_PH1          = "music/prison_boss_phase_1_uhpd.ogg";
+		public static final String PRISON_BOSS_PH2          = "music/prison_boss_phase_2_uhpd.ogg";
 
 		public static final String CAVES_1              = "music/caves_1.ogg";
 		public static final String CAVES_2              = "music/caves_2.ogg";
 		public static final String CAVES_3              = "music/caves_3.ogg";
-		public static final String CAVES_TENSE          = "music/caves_tense.ogg";
-		public static final String CAVES_BOSS           = "music/caves_boss.ogg";
-		public static final String CAVES_BOSS_FINALE    = "music/caves_boss_finale.ogg";
+		public static final String CAVES_UHPD              = "music/caves_uhpd.ogg";
+
+		public static final String CAVES_TENSE          = "music/caves_tense_uhpd.ogg";
+		public static final String CAVES_BOSS           = "music/caves_boss_phase_1_uhpd.ogg";
+		public static final String CAVES_BOSS_INVULN 	= "music/caves_boss_phase_2_uhpd.ogg";
+		public static final String CAVES_BOSS_FINALE    = "music/caves_boss_phase_3_uhpd.ogg";
 
 		public static final String CITY_1               = "music/city_1.ogg";
+		public static final String CITY_UHPD               = "music/city_1_uhpd.ogg";
+
 		public static final String CITY_2               = "music/city_2.ogg";
 		public static final String CITY_3               = "music/city_3.ogg";
-		public static final String CITY_TENSE           = "music/city_tense.ogg";
+		public static final String CITY_TENSE           = "music/city_tense_uhpd.ogg";
 		public static final String CITY_BOSS            = "music/city_boss.ogg";
 		public static final String CITY_BOSS_FINALE     = "music/city_boss_finale.ogg";
 

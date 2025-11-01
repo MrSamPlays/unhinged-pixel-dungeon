@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM300;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Pylon;
@@ -83,13 +84,25 @@ public class CavesBossLevel extends Level {
 			if (BossHealthBar.isBleeding()){
 				Music.INSTANCE.play(Assets.Music.CAVES_BOSS_FINALE, true);
 			} else {
-				Music.INSTANCE.play(Assets.Music.CAVES_BOSS, true);
+				DM300 dm300 = null;
+				for (Mob m : Dungeon.level.mobs) {
+					if (m instanceof DM300) {
+						dm300 = (DM300) m;
+					}
+				}
+                assert dm300 != null;
+                if (dm300.supercharged) {
+					Music.INSTANCE.play(Assets.Music.CAVES_BOSS_INVULN, true);
+				} else {
+					Music.INSTANCE.play(Assets.Music.CAVES_BOSS, true);
+				}
 			}
 		//if wall isn't broken
 		} else if (map[14 + 13*width()] == Terrain.CUSTOM_DECO){
 			Music.INSTANCE.end();
 		} else {
-			Music.INSTANCE.playTracks(CavesLevel.CAVES_TRACK_LIST, CavesLevel.CAVES_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(CavesLevel.CAVES_TRACK_LIST, CavesLevel.CAVES_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.CAVES_UHPD, true);
 		}
 	}
 

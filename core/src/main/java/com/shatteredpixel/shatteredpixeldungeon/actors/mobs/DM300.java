@@ -524,6 +524,8 @@ public class DM300 extends Mob {
 		sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 		((DM300Sprite)sprite).updateChargeState(true);
 		((DM300Sprite)sprite).charge();
+
+		Music.INSTANCE.play(Assets.Music.CAVES_BOSS_INVULN, true);
 		chargeAnnounced = false;
 
 	}
@@ -541,6 +543,7 @@ public class DM300 extends Mob {
 
 		if (pylonsActivated < totalPylonsToActivate()){
 			yell(Messages.get(this, "charge_lost"));
+			Music.INSTANCE.play(Assets.Music.CAVES_BOSS, true);
 		} else {
 			yell(Messages.get(this, "pylons_destroyed"));
 			BossHealthBar.bleed(true);

@@ -99,7 +99,7 @@ public abstract class RegularLevel extends Level {
 
     protected Room roomEntrance;
     protected Room roomExit;
-
+    protected final int MOB_CAP = 25;
     @Override
     protected boolean build() {
 
@@ -212,17 +212,17 @@ public abstract class RegularLevel extends Level {
     }
 
     @Override
-    public int mobLimit() {
+    public int mobLimit() { // increases with evolution
         if (Dungeon.depth <= 1) {
             if (!Statistics.amuletObtained) return 0;
-            else return 15;
+            else return 20;
         }
 
-        int mobs = 5 + Dungeon.depth % 5 + Random.Int(8);
+        int mobs = (int) ((5 + Dungeon.depth % 5) * (10/(8 + evo_factor)));
         if (feeling == Feeling.LARGE) {
             mobs = (int) Math.ceil(mobs * 1.5f);
         }
-        return mobs;
+        return Math.min(mobs, MOB_CAP);
     }
 
     @Override
