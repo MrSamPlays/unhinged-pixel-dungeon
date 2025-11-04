@@ -65,7 +65,7 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = 300;
+		HP = HT = 400;
 		defenseSkill = 20;
 
 		viewDistance = Light.DISTANCE;

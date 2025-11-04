@@ -130,7 +130,9 @@ public class Golem extends Mob {
 				ScrollOfTeleportation.appear(this, target);
 				selfTeleCooldown = 30;
 			} else {
-				target = Dungeon.level.randomDestination(this);
+				do {
+					target = Dungeon.level.randomDestination(this);
+				} while (!Dungeon.level.openSpace[target]);
 			}
 			teleporting = false;
 			spend(TICK);

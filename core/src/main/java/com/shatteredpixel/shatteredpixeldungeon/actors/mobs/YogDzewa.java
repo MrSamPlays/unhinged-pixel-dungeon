@@ -68,7 +68,7 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = 1000;
+		HP = HT = 2000;
 
 		EXP = 50;
 
@@ -102,25 +102,51 @@ public class YogDzewa extends Mob {
 		if (fist == YogFist.DarkFist.class) return YogFist.BrightFist.class;
 		return null;
 	}
-
+	public static String getFistMusic(Class fist) {
+		if (fist == YogFist.BurningFist.class) return Assets.Music.HALLS_BOSS_BURNING_FIST;
+		if (fist == YogFist.SoiledFist.class) return Assets.Music.HALLS_BOSS_SOILED_FIST;
+		if (fist == YogFist.RottingFist.class) return Assets.Music.HALLS_BOSS_ROTTING_FIST;
+		if (fist == YogFist.RustedFist.class) return Assets.Music.HALLS_BOSS_RUSTED_FIST;
+		if (fist == YogFist.BrightFist.class) return Assets.Music.HALLS_BOSS_BRIGHT_FIST;
+		if (fist == YogFist.DarkFist.class) return Assets.Music.HALLS_BOSS_DARK_FIST;
+		return Assets.Music.HALLS_BOSS;
+	}
 	private ArrayList<Class> fistSummons = new ArrayList<>();
 	private ArrayList<Class> challengeSummons = new ArrayList<>();
 	{
 		//offset seed slightly to avoid output patterns
 		Random.pushGenerator(Dungeon.seedCurDepth()+1);
-			fistSummons.add(Random.Int(2) == 0 ? YogFist.BurningFist.class : YogFist.SoiledFist.class);
-			fistSummons.add(Random.Int(2) == 0 ? YogFist.RottingFist.class : YogFist.RustedFist.class);
-			fistSummons.add(Random.Int(2) == 0 ? YogFist.BrightFist.class : YogFist.DarkFist.class);
+			Class fistChoice1 = Random.Int(2) == 0 ? YogFist.BurningFist.class : YogFist.SoiledFist.class;
+			Class fistChoice2 = Random.Int(2) == 0 ? YogFist.RottingFist.class : YogFist.RustedFist.class;
+			Class fistChoice3 = Random.Int(2) == 0 ? YogFist.BrightFist.class : YogFist.DarkFist.class;
+			fistSummons.add(fistChoice1);
+			fistSummons.add(fistChoice2);
+			fistSummons.add(fistChoice3);
 			Random.shuffle(fistSummons);
+			ArrayList<Class> paired_fists = new ArrayList<>();
+			// spawn the other pairs
+			paired_fists.add(getPairedFist(fistChoice1));
+			paired_fists.add(getPairedFist(fistChoice2));
+			paired_fists.add(getPairedFist(fistChoice3));
+
+			Random.shuffle(paired_fists);
+        	fistSummons.addAll(paired_fists);
+
 			//randomly place challenge summons so that two fists of a pair can never spawn together
-			if (Random.Int(2) == 0){
+			if (Random.Int(2) == 0) {
 				challengeSummons.add(getPairedFist(fistSummons.get(1)));
 				challengeSummons.add(getPairedFist(fistSummons.get(2)));
+				challengeSummons.add(getPairedFist(fistSummons.get(3)));
+				challengeSummons.add(getPairedFist(fistSummons.get(4)));
+				challengeSummons.add(getPairedFist(fistSummons.get(5)));
 				challengeSummons.add(getPairedFist(fistSummons.get(0)));
 			} else {
 				challengeSummons.add(getPairedFist(fistSummons.get(2)));
 				challengeSummons.add(getPairedFist(fistSummons.get(0)));
 				challengeSummons.add(getPairedFist(fistSummons.get(1)));
+				challengeSummons.add(getPairedFist(fistSummons.get(3)));
+				challengeSummons.add(getPairedFist(fistSummons.get(5)));
+				challengeSummons.add(getPairedFist(fistSummons.get(4)));
 			}
 		Random.popGenerator();
 	}
@@ -352,12 +378,12 @@ public class YogDzewa extends Mob {
 	}
 
 	public void processFistDeath(){
-		//normally Yog has no logic when a fist dies specifically
+		//normally Yog will switch the music track to the default boss music.
 		//but the very last fist to die does trigger the final phase
-		if (phase == 4 && findFist() == null){
+		if (phase == 7 && findFist() == null){
 			yell(Messages.get(this, "hope"));
 			summonCooldown = -15; //summon a burst of minions!
-			phase = 5;
+			phase = 8;
 			BossHealthBar.bleed(true);
 			Game.runOnRenderThread(new Callback() {
 				@Override
@@ -370,12 +396,24 @@ public class YogDzewa extends Mob {
 					});
 				}
 			});
+		} else if (findFist() == null ) {
+			Game.runOnRenderThread(new Callback() {
+				@Override
+				public void call() {
+					Music.INSTANCE.fadeOut(0.5f, new Callback() {
+						@Override
+						public void call() {
+							Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
+						}
+					});
+				}
+			});
 		}
 	}
 
 	@Override
 	public boolean isAlive() {
-		return super.isAlive() || phase != 5;
+		return super.isAlive() || phase != 8;
 	}
 
 	@Override
@@ -391,10 +429,12 @@ public class YogDzewa extends Mob {
 
 		if (phase == 0 || findFist() != null) return;
 
-		if (phase < 4) {
+		if (phase < 7) {
 			HP = Math.max(HP, HT - 300 * phase);
-		} else if (phase == 4) {
-			HP = Math.max(HP, 100);
+		} else if (phase == 7) {
+			HP = Math.max(HP, 200);
+		} else if (phase == 8) {
+			HP = Math.max(HP, 150);
 		}
 		int dmgTaken = preHP - HP;
 
@@ -403,15 +443,17 @@ public class YogDzewa extends Mob {
 			summonCooldown -= dmgTaken / 10f;
 		}
 
-		if (phase < 4 && HP <= HT - 300*phase){
+		if (phase < 7 && HP <= HT - 300*phase){
 
 			phase++;
 
 			updateVisibility(Dungeon.level);
 			GLog.n(Messages.get(this, "darkness"));
 			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
-
+			// select music based on the default summoned fist
+			String music = getFistMusic(fistSummons.get(0));
 			addFist((YogFist)Reflection.newInstance(fistSummons.remove(0)));
+
 
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
 				addFist((YogFist)Reflection.newInstance(challengeSummons.remove(0)));
@@ -420,6 +462,17 @@ public class YogDzewa extends Mob {
 			CellEmitter.get(Dungeon.level.exit()-1).burst(ShadowParticle.UP, 25);
 			CellEmitter.get(Dungeon.level.exit()).burst(ShadowParticle.UP, 100);
 			CellEmitter.get(Dungeon.level.exit()+1).burst(ShadowParticle.UP, 25);
+			Game.runOnRenderThread(new Callback() {
+				@Override
+				public void call() {
+					Music.INSTANCE.fadeOut(0.5f, new Callback() {
+						@Override
+						public void call() {
+							Music.INSTANCE.play(music, true);
+						}
+					});
+				}
+			});
 
 			if (abilityCooldown < 5) abilityCooldown = 5;
 			if (summonCooldown < 5) summonCooldown = 5;
@@ -469,7 +522,7 @@ public class YogDzewa extends Mob {
 	public void updateVisibility( Level level ){
 		int viewDistance = 4;
 		if (phase > 1 && isAlive()){
-			viewDistance = Math.max(4 - (phase-1), 1);
+			viewDistance = Math.max(4 - ((int) Math.ceil((phase-1) * 0.5f)), 1);
 		}
 		if (Dungeon.isChallenged(Challenges.DARKNESS)) {
 			viewDistance = Math.min(viewDistance, 2);

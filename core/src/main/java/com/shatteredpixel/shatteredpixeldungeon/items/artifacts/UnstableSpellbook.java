@@ -101,7 +101,7 @@ public class UnstableSpellbook extends Artifact {
 
 			i = Random.chances(probs);
 		}
-		scrolls.remove(ScrollOfTransmutation.class);
+		// scrolls.remove(ScrollOfTransmutation.class);
 	}
 
 	@Override
@@ -144,13 +144,7 @@ public class UnstableSpellbook extends Artifact {
 		Scroll scroll;
 		do {
 			scroll = (Scroll) Generator.randomUsingDefaults(Generator.Category.SCROLL);
-		} while (scroll == null
-				//reduce the frequency of these scrolls by half
-				||((scroll instanceof ScrollOfIdentify ||
-				scroll instanceof ScrollOfRemoveCurse ||
-				scroll instanceof ScrollOfMagicMapping) && Random.Int(2) == 0)
-				//cannot roll transmutation
-				|| (scroll instanceof ScrollOfTransmutation));
+		} while (scroll == null);
 
 		scroll.anonymize();
 		curItem = scroll;
@@ -279,7 +273,7 @@ public class UnstableSpellbook extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		chargeCap = (int)((level()+1)*0.6f)+2;
+		chargeCap = level()+3;
 
 		//for artifact transmutation.
 		while (!scrolls.isEmpty() && scrolls.size() > (levelCap-1-level())) {

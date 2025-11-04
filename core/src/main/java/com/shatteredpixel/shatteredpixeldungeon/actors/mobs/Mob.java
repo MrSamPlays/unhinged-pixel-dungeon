@@ -498,7 +498,10 @@ public abstract class Mob extends Char {
     }
 
     private boolean cellIsPathable(int cell) {
-
+        // large enemies avoid not-open spaces
+        if (Char.hasProp(this, Char.Property.LARGE) && !Dungeon.level.openSpace[cell]) {
+            return false;
+        }
         // trap hunting (traps are tagged avoid terrain (hero autopathing should be unaffected)
         // mobs have a 1/5 chance of walking on visible traps if the hero is visible
         if (Dungeon.level.trap_passable[cell]) {
@@ -523,9 +526,7 @@ public abstract class Mob extends Char {
         }
 
 
-        if (Char.hasProp(this, Char.Property.LARGE) && !Dungeon.level.openSpace[cell]) {
-            return false;
-        }
+
         if (Actor.findChar(cell) != null) {
             return false;
         }
@@ -630,30 +631,32 @@ public abstract class Mob extends Char {
             if (newPath) {
                 //If we aren't hunting, always take a full path, avoid trap spaces when not hunting
                 PathFinder.Path full = Dungeon.findPath(this, target, Dungeon.level.passable, fieldOfView, true);
-                if (state != HUNTING) {
-                    path = full;
-                } else {
-                    //otherwise, check if other characters are forcing us to take a very slow route
-                    // and don't try to go around them yet in response, basically assume their blockage is temporary
-                    PathFinder.Path ignoreChars = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, false);
-                    if (ignoreChars != null && (full == null || full.size() > 2 * ignoreChars.size())) {
-                        //check if first cell of shorter path is valid. If it is, use new shorter path. Otherwise do nothing and wait.
-                        path = ignoreChars;
-                        if (!cellIsPathable(ignoreChars.getFirst())) {
-                            return false;
-                        }
-                    } else {
-                        // when hunting ignore stepping on traps
-                        if (full.size() < 5 || Random.Int(0,2) != 0) { // if we're close step on traps
-                            full = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, true);
-                        }
-
+                if (full != null) {
+                    if (state != HUNTING) {
                         path = full;
+                    } else {
+                        //otherwise, check if other characters are forcing us to take a very slow route
+                        // and don't try to go around them yet in response, basically assume their blockage is temporary
+                        PathFinder.Path ignoreChars = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, false);
+                        if (ignoreChars != null && (full == null || full.size() > 2 * ignoreChars.size())) {
+                            //check if first cell of shorter path is valid. If it is, use new shorter path. Otherwise do nothing and wait.
+                            path = ignoreChars;
+                            if (!cellIsPathable(ignoreChars.getFirst())) {
+                                return false;
+                            }
+                        } else {
+                            // when hunting ignore stepping on traps
+                            if (full.size() < 5 || Random.Int(0, 2) != 0) { // if we're close step on traps
+                                full = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, true);
+                            }
+
+                            path = full;
+                        }
                     }
                 }
             }
 
-            if (path != null) {
+            if (path != null && !path.isEmpty()) {
                 step = path.removeFirst();
             } else {
                 return false;

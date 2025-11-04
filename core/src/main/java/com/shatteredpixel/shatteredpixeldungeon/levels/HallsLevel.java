@@ -80,7 +80,8 @@ public class HallsLevel extends RegularLevel {
 		if (Statistics.amuletObtained){
 			Music.INSTANCE.play(Assets.Music.HALLS_TENSE, true);
 		} else {
-			Music.INSTANCE.playTracks(HALLS_TRACK_LIST, HALLS_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(HALLS_TRACK_LIST, HALLS_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.HALLS_UHPD, true);
 		}
 	}
 
