@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
@@ -82,13 +83,36 @@ public class HallsBossLevel extends Level {
 			if (BossHealthBar.isBleeding()){
 				Music.INSTANCE.play(Assets.Music.HALLS_BOSS_FINALE, true);
 			} else {
-				Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
+				Class fist = null;
+				for (Mob m : mobs) {
+					if (m instanceof YogFist) {
+						// if there's multiple fists return the first one
+						fist = m.getClass();
+						break;
+					}
+				}
+				if (fist == null) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
+				} else if (fist.equals(YogFist.BurningFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_BURNING_FIST, true);
+                } else if (fist.equals(YogFist.SoiledFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_SOILED_FIST, true);
+				} else if (fist.equals(YogFist.RottingFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_ROTTING_FIST, true);
+				} else if (fist.equals(YogFist.RustedFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_RUSTED_FIST, true);
+				} else if (fist.equals(YogFist.BrightFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_BRIGHT_FIST, true);
+				}else if (fist.equals(YogFist.DarkFist.class)) {
+					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_DARK_FIST, true);
+				}
 			}
 		//if exit isn't unlocked
 		} else if (map[exit()] != Terrain.EXIT || Statistics.amuletObtained){
 			Music.INSTANCE.end();
 		} else {
-			Music.INSTANCE.playTracks(HallsLevel.HALLS_TRACK_LIST, HallsLevel.HALLS_TRACK_CHANCES, false);
+			// Music.INSTANCE.playTracks(HallsLevel.HALLS_TRACK_LIST, HallsLevel.HALLS_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.HALLS_UHPD, true);
 		}
 	}
 

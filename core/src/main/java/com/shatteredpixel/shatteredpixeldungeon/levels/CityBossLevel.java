@@ -98,7 +98,7 @@ public class CityBossLevel extends Level {
 		} else if (map[topDoor] == Terrain.LOCKED_DOOR){
 			Music.INSTANCE.end();
 		} else {
-			Music.INSTANCE.playTracks(CityLevel.CITY_TRACK_LIST, CityLevel.CITY_TRACK_CHANCES, false);
+			Music.INSTANCE.play(Assets.Music.CITY_UHPD, true);
 		}
 	}
 

@@ -207,7 +207,7 @@ public class Hero extends Char {
 	public ArmorAbility armorAbility = null;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	public LinkedHashMap<Talent, Talent> metamorphedTalents = new LinkedHashMap<>();
-	
+	public int overwhelm = 0;
 	private int attackSkill = 10;
 	private int defenseSkill = 5;
 
@@ -846,7 +846,15 @@ public class Hero extends Char {
 				Dungeon.level.updateFieldOfView(this, fieldOfView);
 			}
 		}
-		
+		float eps = 0.05f;
+
+		if (Dungeon.level.evo_factor < 0.8 + eps && Dungeon.level.evo_factor > 0.8 - eps && overwhelm == 0) {
+			GLog.n(Messages.get(Level.class,"evo_factor_warn"));
+			overwhelm++;
+		} else if (Dungeon.level.evo_factor < 0.6 + eps && Dungeon.level.evo_factor > 0.6 + eps && overwhelm == 1) {
+			GLog.n(Messages.get(Level.class,"evo_factor_danger"));
+			overwhelm++;
+		}
 		checkVisibleMobs();
 		BuffIndicator.refreshHero();
 		BuffIndicator.refreshBoss();

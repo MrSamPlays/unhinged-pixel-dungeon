@@ -579,9 +579,10 @@ public abstract class Level implements Bundlable {
 	// logic to update evo_factor
 	public void updateEvoFactor(Object reason) {
 		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
-		// Evo factor is unaffected when inside a quest zone
-		if (reason instanceof LevelTransition || Dungeon.branch != 0) {
+		// Evo factor is unaffected when inside a quest zone or a boss level
+		if (reason instanceof LevelTransition || Dungeon.branch != 0 || Dungeon.depth % 5 == 0) {
 			evo_factor = 1f;
+			Dungeon.hero.overwhelm = 0;
 			return;
 		}
 		if (reason == null) {
@@ -593,8 +594,9 @@ public abstract class Level implements Bundlable {
 		}
 		// hero killing mobs increases spawn rate more
 		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
-			evo_factor -= 0.0075f;
+			evo_factor -= 0.0065f;
 		}
+
 		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
 		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
 		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
@@ -804,7 +806,7 @@ public abstract class Level implements Bundlable {
 			cooldown = TIME_TO_RESPAWN;
 		}
 		// time factor
-		updateEvoFactor(null);
+		// updateEvoFactor(null);
 		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime() * evo_factor;
 	}
 
