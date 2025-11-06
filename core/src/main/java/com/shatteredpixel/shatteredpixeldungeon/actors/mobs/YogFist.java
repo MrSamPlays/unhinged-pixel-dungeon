@@ -177,12 +177,12 @@ public abstract class YogFist extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 36;
+		return 45;
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 18, 36 );
+		return Random.NormalIntRange( 18, 40 );
 	}
 
 	@Override

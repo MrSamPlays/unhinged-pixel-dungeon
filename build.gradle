@@ -14,8 +14,8 @@ allprojects {
         appName = 'Unhinged Pixel Dungeon'
         appPackageName = 'com.unhingedpx.unhingedpixeldungeon'
 
-        appVersionCode = 878
-        appVersionName = '0.0.1-UHPD'
+        appVersionCode = 879
+        appVersionName = '0.0.2-UHPD'
 
         appJavaCompatibility = JavaVersion.VERSION_11
 

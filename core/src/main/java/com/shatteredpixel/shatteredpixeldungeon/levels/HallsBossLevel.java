@@ -92,7 +92,11 @@ public class HallsBossLevel extends Level {
 					}
 				}
 				if (fist == null) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
+					if (BossHealthBar.isBleeding()) {
+						Music.INSTANCE.play(Assets.Music.HALLS_BOSS_FINALE, true);
+					} else {
+						Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
+					}
 				} else if (fist.equals(YogFist.BurningFist.class)) {
 					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_BURNING_FIST, true);
                 } else if (fist.equals(YogFist.SoiledFist.class)) {
