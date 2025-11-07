@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
@@ -28,9 +34,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -38,7 +46,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sickle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -425,7 +438,10 @@ public class YogDzewa extends Mob {
 	public void damage( int dmg, Object src ) {
 
 		int preHP = HP;
-		super.damage( dmg, src );
+		if (phase < 8 && !isInvulnerable(src.getClass())) {
+			// only takes bleeding damage on final phase
+			super.damage(dmg, src);
+		}
 
 		if (phase == 0 || findFist() != null) return;
 
@@ -433,8 +449,6 @@ public class YogDzewa extends Mob {
 			HP = Math.max(HP, HT - 300 * phase);
 		} else if (phase == 7) {
 			HP = Math.max(HP, 200);
-		} else if (phase == 8) {
-			HP = Math.max(HP, 150);
 		}
 		int dmgTaken = preHP - HP;
 
@@ -477,6 +491,49 @@ public class YogDzewa extends Mob {
 			if (abilityCooldown < 5) abilityCooldown = 5;
 			if (summonCooldown < 5) summonCooldown = 5;
 
+		} else if (phase >= 7) {
+			// Boss will only take bleeding damage beyond this point (god's eyes are bleeding from seeing the horrors of this world) (and will randomly teleport the attacker somewhere else)
+			if (!isInvulnerable(src.getClass())
+					&& !(src instanceof Bleeding)
+					&& buff(Sickle.HarvestBleedTracker.class) == null && !(src instanceof Viscosity.DeferedDamage) && buff(Viscosity.ViscosityTracker.class) == null){ // no deferred damage
+				dmg = Math.round( dmg * resist( src.getClass() ));
+				if (dmg < 0){
+					return;
+				}
+				Bleeding b = buff(Bleeding.class);
+				if (b == null){
+					b = new Bleeding();
+				}
+				b.announced = false;
+				// damage is cut to 1/10 and does not stack (but every attack will do at least 1 damage)
+				b.set(Math.max(dmg*.1f,1));
+				b.attachTo(this);
+				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
+				if (src instanceof Char) {
+					int cell = -1;
+					int tries = 0;
+					do {
+						// this should break out;
+						cell = Random.Int(Dungeon.level.map.length);
+						tries++;
+						if (tries > 20) {
+							// it took us too many attempts to find a valid cell, abort teleport
+							cell = -1;
+							break;
+						}
+					} while (!Dungeon.level.passable[cell]);
+					if (cell != -1) {
+						ScrollOfTeleportation.appear((Char) src, cell);
+						if (src instanceof Hero) {
+							((Hero) src).interrupt();
+							Dungeon.observe();
+							GameScene.updateFog();
+						}
+					}
+				}
+			} else{
+				super.damage(dmg, src);
+			}
 		}
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
@@ -484,7 +541,6 @@ public class YogDzewa extends Mob {
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/3f);
 			else                                                    lock.addTime(dmgTaken/2f);
 		}
-
 	}
 
 	public void addFist(YogFist fist){

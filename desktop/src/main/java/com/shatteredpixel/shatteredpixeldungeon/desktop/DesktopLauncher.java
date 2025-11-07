@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.desktop;
 
@@ -26,6 +32,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3FileHandle;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Preferences;
+import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -96,14 +103,14 @@ public class DesktopLauncher {
 					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
 							title + " was not able to initialize its graphics display, sorry about that!\n\n" +
 									"This usually happens when your graphics card has misconfigured drivers or does not support openGL 2.0+.\n\n" +
-									"If you are certain the game should work on your computer, please message the developer (Evan@ShatteredPixel.com)\n\n" +
+									"If you are certain the game should work on your computer, please post a github issue on (https://github.com/MrSamPlays/unhinged-pixel-dungeon/)\n\n" +
 									"version: " + Game.version + "\n" +
 									exceptionMsg,
 							"ok", "error", false);
 				} else {
 					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
 							title + " has run into an error it cannot recover from and has crashed, sorry about that!\n\n" +
-									"If you could, please email this error message to the developer (Evan@ShatteredPixel.com):\n\n" +
+									"If you could, please post a github issue on (https://github.com/MrSamPlays/unhinged-pixel-dungeon/):\n\n" +
 									"version: " + Game.version + "\n" +
 									exceptionMsg,
 							"ok", "error", false);
@@ -145,17 +152,17 @@ public class DesktopLauncher {
 
 		String basePath = "";
 		Files.FileType baseFileType = null;
-		if (SharedLibraryLoader.isWindows) {
+		if (SharedLibraryLoader.os == Os.Windows) {
 			if (System.getProperties().getProperty("os.name").equals("Windows XP")) {
 				basePath = "Application Data/." + vendor + "/" + title + "/";
 			} else {
 				basePath = "AppData/Roaming/." + vendor + "/" + title + "/";
 			}
 			baseFileType = Files.FileType.External;
-		} else if (SharedLibraryLoader.isMac) {
+		} else if (SharedLibraryLoader.os == Os.MacOsX) {
 			basePath = "Library/Application Support/" + title + "/";
 			baseFileType = Files.FileType.External;
-		} else if (SharedLibraryLoader.isLinux) {
+		} else if (SharedLibraryLoader.os == Os.Linux) {
 			String XDGHome = System.getenv("XDG_DATA_HOME");
 			if (XDGHome == null) XDGHome = System.getProperty("user.home") + "/.local/share";
 

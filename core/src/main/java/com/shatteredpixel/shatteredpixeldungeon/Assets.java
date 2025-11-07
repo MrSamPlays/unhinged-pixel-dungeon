@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
@@ -158,7 +164,7 @@ public class Assets {
         public static final String HALLS_UHPD = "music/halls_1_uhpd.ogg";
         public static final String HALLS_2 = "music/halls_2.ogg";
         public static final String HALLS_3 = "music/halls_3.ogg";
-        public static final String HALLS_TENSE = "music/halls_tense.ogg";
+        public static final String HALLS_TENSE = "music/halls_tense_uhpd.ogg";
         public static final String HALLS_BOSS = "music/halls_boss_phase_1_uhpd.ogg";
         public static final String HALLS_BOSS_BURNING_FIST = "music/halls_boss_burning_fist_uhpd.ogg";
         public static final String HALLS_BOSS_SOILED_FIST = "music/halls_boss_soiled_fist_uhpd.ogg";
