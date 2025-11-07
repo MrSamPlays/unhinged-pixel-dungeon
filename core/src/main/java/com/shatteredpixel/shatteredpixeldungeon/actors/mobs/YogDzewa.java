@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
@@ -40,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -488,7 +495,7 @@ public class YogDzewa extends Mob {
 			// Boss will only take bleeding damage beyond this point (god's eyes are bleeding from seeing the horrors of this world) (and will randomly teleport the attacker somewhere else)
 			if (!isInvulnerable(src.getClass())
 					&& !(src instanceof Bleeding)
-					&& buff(Sickle.HarvestBleedTracker.class) == null){
+					&& buff(Sickle.HarvestBleedTracker.class) == null && !(src instanceof Viscosity.DeferedDamage) && buff(Viscosity.ViscosityTracker.class) == null){ // no deferred damage
 				dmg = Math.round( dmg * resist( src.getClass() ));
 				if (dmg < 0){
 					return;
@@ -498,8 +505,8 @@ public class YogDzewa extends Mob {
 					b = new Bleeding();
 				}
 				b.announced = false;
-				// damage is cut to 1/10 and does not stack
-				b.set(dmg*.1f);
+				// damage is cut to 1/10 and does not stack (but every attack will do at least 1 damage)
+				b.set(Math.max(dmg*.1f,1));
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 				if (src instanceof Char) {

@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
@@ -36,18 +42,18 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.ChangeInfo;
 import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.WndChanges;
 import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.WndChangesTabbed;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_1_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_2_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_3_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_4_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_5_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_6_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_7_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_8_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_9_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v1_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v2_X_Changes;
-import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v3_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_1_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_2_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_3_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_4_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_5_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_6_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_7_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_8_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v0_9_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v1_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v2_X_Changes;
+//import com.shatteredpixel.shatteredpixeldungeon.ui.changelist.v3_X_Changes;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
@@ -85,8 +91,8 @@ public class ChangesScene extends PixelScene {
 		TitleBackground BG = new TitleBackground(w, h);
 		//background added later
 
-		w -= insets.left + insets.right;
-		h -= insets.top + insets.bottom;
+		w -= (int) (insets.left + insets.right);
+		h -= (int) (insets.top + insets.bottom);
 
 		IconTitle title = new IconTitle(Icons.CHANGES.get(), Messages.get(this, "title"));
 		title.setSize(200, 0);
@@ -153,7 +159,7 @@ public class ChangesScene extends PixelScene {
 			langWarn.hardlight(CharSprite.WARNING);
 			changeInfos.add(langWarn);
 		}
-		
+		/*
 		switch (changesSelected){
 			case 0: default:
 				v3_X_Changes.addAllChanges(changeInfos);
@@ -183,7 +189,7 @@ public class ChangesScene extends PixelScene {
 				v0_2_X_Changes.addAllChanges(changeInfos);
 				v0_1_X_Changes.addAllChanges(changeInfos);
 				break;
-		}
+		}*/
 
 		ScrollPane list = new ScrollPane( new Component() ){
 
@@ -236,7 +242,7 @@ public class ChangesScene extends PixelScene {
 				panel.innerWidth() + 2,
 				panel.innerHeight() + 2);
 		list.scrollTo(0, 0);
-
+		/*
 		StyledButton btn3_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "3.X", 8){
 			@Override
 			protected void onClick() {
@@ -352,6 +358,8 @@ public class ChangesScene extends PixelScene {
 		addToBack( BG );
 
 		fadeIn();
+
+		 */
 	}
 
 	private void updateChangesText(Image icon, String title, String... messages){

@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
@@ -74,11 +80,7 @@ public class SewerLevel extends RegularLevel {
 
 	public void playLevelMusic(){
 		if (Ghost.Quest.active() || Statistics.amuletObtained){
-			if (Statistics.amuletObtained && Dungeon.depth == 1){
-				Music.INSTANCE.play(Assets.Music.THEME_FINALE, true);
-			} else {
-				Music.INSTANCE.play(Assets.Music.SEWERS_TENSE, true);
-			}
+			Music.INSTANCE.play(Assets.Music.SEWERS_TENSE, true);
 		} else {
 			// Music.INSTANCE.playTracks(SEWER_TRACK_LIST, SEWER_TRACK_CHANCES, false); // Default
 			Music.INSTANCE.play(Assets.Music.SEWERS_UHPD, true); // Unhinged
@@ -164,6 +166,7 @@ public class SewerLevel extends RegularLevel {
 
 					@Override
 					public void afterCreate() {
+						Music.INSTANCE.play(Assets.Music.THEME_FINALE, true);
 						Badges.validateHappyEnd();
 						Dungeon.win( Amulet.class );
 						Dungeon.deleteGame( GamesInProgress.curSlot, true );

@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2025 Evan Debenham
  *
+ * Unhinged Pixel Dungeon
+ * Copyright (C) 2025-2025 Sam (MrSamPlays)
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +20,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
+
+
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
@@ -67,17 +73,24 @@ public class AboutScene extends PixelScene {
 		final int SAM_COLOR = 0xffd400;
 		CreditsBlock uhpd = new CreditsBlock(true, SAM_COLOR,
 				"Unhinged Pixel Dungeon",
-				Icons.SHPX.get(), // TODO Replace with custom icon
-				"Developed by: _Sam_\n Based on Shattered Pixel Dungeon's open source",
-				"https://github.com/MrSamPlays/unhinged-pixel-dungeon",
+				Icons.UHPD.get(), // TODO Replace with custom icon
+				"Developed by: _MrSamPlays_\n Based on Shattered Pixel Dungeon's open source",
+				"Source Code/Repository",
 				"https://github.com/MrSamPlays/unhinged-pixel-dungeon");
 		if (landscape()){
-			uhpd.setRect((w - fullWidth/2f)/2f - 6, insets.top + 10, 120, 0);
+			uhpd.setRect((w - fullWidth)/2f - 6, insets.top + 10, 120, 0);
 		} else {
-			uhpd.setRect((w - fullWidth/2f)/2f, insets.top + 6, 120, 0);
+			uhpd.setRect((w - fullWidth/2f), insets.top + 6, 120, 0);
 		}
 		content.add(uhpd);
 
+		CreditsBlock uhpd_music = new CreditsBlock(false, SAM_COLOR, "Unhinged Music:", Icons.UHPD.get(), "\nMrSamPlays", "Download and Listen", "https://github.com/MrSamPlays/unhinged-pixel-dungeon/tree/master/core/src/main/assets/music");
+		if (landscape()) {
+			uhpd_music.setRect(uhpd.right() + 6, insets.top + 16, colWidth / 2f, 0);
+		} else {
+			uhpd_music.setRect(uhpd.right(), insets.top + 16, colWidth / 2f, 0);
+		}
+		content.add(uhpd_music);
 		//*** Shattered Pixel Dungeon Credits ***
 
 
@@ -93,7 +106,7 @@ public class AboutScene extends PixelScene {
 			shpx.setRect((w - fullWidth)/2f, uhpd.bottom() + 6, 120, 0);
 		}
 		content.add(shpx);
-
+		addLine(shpx.top() - 4, content);
 		CreditsBlock alex = new CreditsBlock(false, Window.SHPX_COLOR,
 				"Splash Art & Design:",
 				Icons.ALEKS.get(),
@@ -118,7 +131,7 @@ public class AboutScene extends PixelScene {
 		content.add(charlie);
 
 		CreditsBlock kristjan = new CreditsBlock(false, Window.SHPX_COLOR,
-				"Music:",
+				"Original Music:",
 				Icons.KRISTJAN.get(),
 				"Kristjan Haaristo",
 				"youtube.com/@kristjan...",
