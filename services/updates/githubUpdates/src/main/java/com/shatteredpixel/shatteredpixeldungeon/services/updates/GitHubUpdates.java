@@ -66,7 +66,7 @@ public class GitHubUpdates extends UpdateService {
 		}
 
 		Net.HttpRequest httpGet = new Net.HttpRequest(Net.HttpMethods.GET);
-		httpGet.setUrl("localhost");
+		httpGet.setUrl("http://localhost");
 		httpGet.setHeader("Accept", "application/vnd.github.v3+json");
 
 		Gdx.net.sendHttpRequest(httpGet, new Net.HttpResponseListener() {
@@ -149,6 +149,7 @@ public class GitHubUpdates extends UpdateService {
 				callback.onConnectionFailed();
 			}
 		});
+
 
 	}
 

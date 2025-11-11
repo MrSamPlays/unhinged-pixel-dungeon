@@ -143,16 +143,16 @@ public class HallsLevel extends RegularLevel {
 	protected Class<?>[] trapClasses() {
 		return new Class[]{
 				FrostTrap.class, StormTrap.class, CorrosionTrap.class, BlazingTrap.class, DisintegrationTrap.class,
-				RockfallTrap.class, FlashingTrap.class, GuardianTrap.class, WeakeningTrap.class,
-				DisarmingTrap.class, SummoningTrap.class, WarpingTrap.class, CursingTrap.class, GrimTrap.class, PitfallTrap.class, DistortionTrap.class, GatewayTrap.class, GeyserTrap.class };
+				RockfallTrap.class, WarpingTrap.class, GuardianTrap.class, WeakeningTrap.class, GeyserTrap.class,
+				DisarmingTrap.class, SummoningTrap.class, FlashingTrap.class, CursingTrap.class, GrimTrap.class, PitfallTrap.class, DistortionTrap.class, GatewayTrap.class};
 	}
 
 	@Override
 	protected float[] trapChances() {
 		return new float[]{
 				4, 4, 4, 4, 4,
-				2, 2, 2, 2,
-				1, 1, 1, 1, 1, 1, 1, 1, 1 };
+				2, 2, 2, 2, 2,
+				1, 1, 1, 1, 1, 1, 1, 1 };
 	}
 	
 	@Override

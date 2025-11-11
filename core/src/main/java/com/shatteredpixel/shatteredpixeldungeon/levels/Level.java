@@ -913,7 +913,7 @@ public abstract class Level implements Bundlable {
 			secret[i]		= (flags & Terrain.SECRET) != 0;
 			solid[i]		= (flags & Terrain.SOLID) != 0;
 			avoid[i]		= (flags & Terrain.AVOID) != 0;
-			trap_passable[i]         = ((flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0) && (flags & (Terrain.PIT)) == 0;
+			trap_passable[i]         = ((flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0) && (flags & (Terrain.PIT)) == 0; // workaround to prevent mobs from walking into pits, note that traps have not been initialized at this point.
 			water[i]		= (flags & Terrain.LIQUID) != 0;
 			pit[i]			= (flags & Terrain.PIT) != 0;
 		}
@@ -921,7 +921,10 @@ public abstract class Level implements Bundlable {
 		for (Blob b : blobs.values()){
 			b.onBuildFlagMaps(this);
 		}
-		
+		// Boundary is not passable and not visible beyond
+		// 0, 1, 2 ... width() - 1,
+		// width(), width + 1, width + 2..., 2 * width - 1
+		// length() - width(), length - width + 1 ... length()
 		int lastRow = length() - width();
 		for (int i=0; i < width(); i++) {
 			passable[i] = avoid[i] = trap_passable[i] = false;
@@ -953,7 +956,6 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-
 	}
 
 	public void destroy( int pos ) {
@@ -1008,7 +1010,7 @@ public abstract class Level implements Bundlable {
 		level.secret[cell]		    = (flags & Terrain.SECRET) != 0;
 		level.solid[cell]			= (flags & Terrain.SOLID) != 0;
 		level.avoid[cell]			= (flags & Terrain.AVOID) != 0;
-		level.trap_passable[cell]   = (flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0;
+		level.trap_passable[cell]   = (flags & (Terrain.PASSABLE)) != 0 || (level.traps.get(cell) != null); // traps ok here since they are already set
 		level.pit[cell]			    = (flags & Terrain.PIT) != 0;
 		level.water[cell]			= terrain == Terrain.WATER;
 

@@ -55,7 +55,8 @@ public class PathFinder {
 	//Useful for some logic functions, but is slower due to lack of array-access order.
 	public static int[] CIRCLE4;
 	public static int[] CIRCLE8;
-	
+
+
 	public static void setMapSize( int width, int height ) {
 		
 		PathFinder.width = width;
@@ -328,7 +329,6 @@ public class PathFinder {
 					queue[tail++] = n;
 					distance[n] = nextDistance;
 				}
-					
 			}
 		}
 		
