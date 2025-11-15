@@ -28,8 +28,11 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.BArray;
+import com.watabou.utils.Random;
 
 public class WarpingTrap extends TeleportationTrap {
 
@@ -44,6 +47,14 @@ public class WarpingTrap extends TeleportationTrap {
 		if (Dungeon.level.distance(Dungeon.hero.pos, pos) <= 1){
 			BArray.setFalse(Dungeon.level.visited);
 			BArray.setFalse(Dungeon.level.mapped);
+			// todo, reset all the levels
+			// bonus chance to hide existing level traps
+			for (Trap t : Dungeon.level.traps.values()) {
+				if (t.visible && t.active && t.canBeHidden && Random.Int(10) == 0) {
+					t.hide();
+				}
+			}
+			GLog.n(Messages.get(this,"trigger"));
 		}
 
 		super.activate();

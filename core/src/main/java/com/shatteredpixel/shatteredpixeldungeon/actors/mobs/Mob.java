@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
@@ -1005,7 +1006,11 @@ public abstract class Mob extends Char {
                 }
             }
         }
-        Dungeon.level.updateEvoFactor(cause);
+        if (Dungeon.hero.buff(Overwhelm.class) != null) {
+            Dungeon.hero.buff(Overwhelm.class).updateLevel(cause);
+        } else {
+            Buff.affect(Dungeon.hero, Overwhelm.class).updateLevel(cause);
+        }
     }
 
     public float lootChance() {

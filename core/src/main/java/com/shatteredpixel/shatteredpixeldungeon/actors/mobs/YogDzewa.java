@@ -510,7 +510,7 @@ public class YogDzewa extends Mob {
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 				if (src instanceof Char) {
-					int cell = -1;
+					int cell;
 					int tries = 0;
 					do {
 						// this should break out;

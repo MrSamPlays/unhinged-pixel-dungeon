@@ -63,6 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PhysicalEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
@@ -213,7 +214,6 @@ public class Hero extends Char {
 	public ArmorAbility armorAbility = null;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	public LinkedHashMap<Talent, Talent> metamorphedTalents = new LinkedHashMap<>();
-	public int overwhelm = 0;
 	private int attackSkill = 10;
 	private int defenseSkill = 5;
 
@@ -454,6 +454,7 @@ public class Hero extends Char {
 		}
 		Buff.affect( this, Regeneration.class );
 		Buff.affect( this, Hunger.class );
+		Buff.affect(this, Overwhelm.class);
 	}
 	
 	public int tier() {
@@ -837,8 +838,6 @@ public class Hero extends Char {
 
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
-		// time
-		Dungeon.level.updateEvoFactor(null);
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();
 		}
@@ -851,15 +850,6 @@ public class Hero extends Char {
 				//otherwise just directly re-calculate FOV
 				Dungeon.level.updateFieldOfView(this, fieldOfView);
 			}
-		}
-		float eps = 0.05f;
-
-		if (Dungeon.level.evo_factor < 0.8 + eps && Dungeon.level.evo_factor > 0.8 - eps && overwhelm == 0) {
-			GLog.n(Messages.get(Level.class,"evo_factor_warn"));
-			overwhelm++;
-		} else if (Dungeon.level.evo_factor < 0.6 + eps && Dungeon.level.evo_factor > 0.6 + eps && overwhelm == 1) {
-			GLog.n(Messages.get(Level.class,"evo_factor_danger"));
-			overwhelm++;
 		}
 		checkVisibleMobs();
 		BuffIndicator.refreshHero();

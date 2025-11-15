@@ -60,7 +60,7 @@ import com.watabou.utils.Random;
 public class Goo extends Mob {
 
     {
-        HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100;
+        HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 150 : 100;
         EXP = 10;
         defenseSkill = 15;
         spriteClass = GooSprite.class;
@@ -143,7 +143,7 @@ public class Goo extends Mob {
 
                 // play rage music when health is running low
                 if (!rageMusic) {
-                    Music.INSTANCE.fadeOut(1f, new Callback() {
+                    Music.INSTANCE.fadeOut(0.5f, new Callback() {
                         @Override
                         public void call() {
                             Music.INSTANCE.play(Assets.Music.SEWERS_BOSS_ENRAGED_UHPD, true);

@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.OozeTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.PoisonDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ShockingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SurpriseTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TeleportationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ToxicTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -135,7 +136,7 @@ public class PrisonLevel extends RegularLevel {
 		return new Class[]{
 				ChillingTrap.class, ShockingTrap.class, ToxicTrap.class, BurningTrap.class, PoisonDartTrap.class,
 				AlarmTrap.class, OozeTrap.class, GrippingTrap.class,
-				ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class, GatewayTrap.class, GeyserTrap.class };
+				ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class, GatewayTrap.class, GeyserTrap.class, SurpriseTrap.class };
 	}
 
 	@Override
@@ -143,7 +144,7 @@ public class PrisonLevel extends RegularLevel {
 		return new float[]{
 				4, 4, 4, 4, 4,
 				2, 2, 2,
-				1, 1, 1, 1, 1, 1 };
+				1, 1, 1, 1, 1, 1, 1};
 	}
 
 	@Override

@@ -29,7 +29,9 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -110,6 +112,7 @@ public abstract class Trap implements Bundlable {
 			Dungeon.level.discover(pos);
 			Bestiary.setSeen(getClass());
 			Bestiary.countEncounter(getClass());
+			Buff.affect(Dungeon.hero, Overwhelm.class).updateLevel(this);
 			activate();
 		}
 	}
@@ -119,6 +122,9 @@ public abstract class Trap implements Bundlable {
 	public void disarm(){
 		active = false;
 		Dungeon.level.disarmTrap(pos);
+		if (Dungeon.hero.buff(Overwhelm.class) != null) {
+			Dungeon.hero.buff(Overwhelm.class).updateLevel(this);
+		}
 	}
 
 	//returns the depth value the trap should use for determining its power

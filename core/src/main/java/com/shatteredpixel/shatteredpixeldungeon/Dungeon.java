@@ -219,7 +219,7 @@ public class Dungeon {
 	public static long lastPlayed;
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
-	public static void initSeed(){
+	public static void initSeed() {
 		if (daily) {
 			//Ensures that daily seeds are not in the range of user-enterable seeds
 			seed = SPDSettings.lastDaily() + DungeonSeed.TOTAL_SEEDS;

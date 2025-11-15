@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
@@ -495,7 +496,6 @@ public abstract class Level implements Bundlable {
 		if (bundle.contains( "respawner" )){
 			respawner = (MobSpawner) bundle.get("respawner");
 		}
-		evo_factor = bundle.getFloat(EVOLUTION);
 		buildFlagMaps();
 		cleanWalls();
 
@@ -521,7 +521,6 @@ public abstract class Level implements Bundlable {
 		bundle.put( FEELING, feeling );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
-		bundle.put(EVOLUTION, evo_factor);
 	}
 	
 	public int tunnelTile() {
@@ -583,30 +582,30 @@ public abstract class Level implements Bundlable {
 	}
 
 	// logic to update evo_factor
-	public void updateEvoFactor(Object reason) {
-		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
-		// Evo factor is unaffected when inside a quest zone or a boss level
-		if (reason instanceof LevelTransition || Dungeon.branch != 0 || Dungeon.depth % 5 == 0) {
-			evo_factor = 1f;
-			Dungeon.hero.overwhelm = 0;
-			return;
-		}
-		if (reason == null) {
-			evo_factor -= 0.0001f;
-		}
-		// triggering traps also increases evolution
-		if (reason instanceof Trap) {
-			evo_factor -= 0.0002f;
-		}
-		// hero killing mobs increases spawn rate more
-		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
-			evo_factor -= 0.0065f;
-		}
-
-		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
-		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
-		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
-	}
+//	public void updateEvoFactor(Object reason) {
+//		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
+//		// Evo factor is unaffected when inside a quest zone or a boss level
+//		if (reason instanceof LevelTransition || Dungeon.branch != 0 || Dungeon.depth % 5 == 0) {
+//			evo_factor = 1f;
+//			Dungeon.hero.overwhelm = 0;
+//			return;
+//		}
+//		if (reason == null) {
+//			evo_factor -= 0.0001f;
+//		}
+//		// triggering traps also increases evolution
+//		if (reason instanceof Trap) {
+//			evo_factor -= 0.0002f;
+//		}
+//		// hero killing mobs increases spawn rate more
+//		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
+//			evo_factor -= 0.0065f;
+//		}
+//
+//		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
+//		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
+//		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
+//	}
 	public LevelTransition getTransition(LevelTransition.Type type){
 		if (transitions.isEmpty()){
 			return null;
@@ -649,7 +648,7 @@ public abstract class Level implements Bundlable {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
 		Game.switchScene(InterlevelScene.class);
-		updateEvoFactor(transition);
+		Buff.affect(Dungeon.hero, Overwhelm.class).updateLevel(transition);
 		return true;
 	}
 
@@ -813,7 +812,10 @@ public abstract class Level implements Bundlable {
 		}
 		// time factor
 		// updateEvoFactor(null);
-		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime() * evo_factor;
+		Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
+        cooldown = 1 + (cooldown * (1 - o.getLevel()) * Dungeon.level.mobCount());
+        cooldown = Math.max(cooldown, 1f);
+		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime();
 	}
 
 	public boolean spawnMob(int disLimit){
