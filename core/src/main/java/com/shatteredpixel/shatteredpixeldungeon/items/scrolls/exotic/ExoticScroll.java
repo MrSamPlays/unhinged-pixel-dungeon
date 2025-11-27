@@ -89,7 +89,9 @@ public abstract class ExoticScroll extends Scroll {
 		regToExo.put(ScrollOfTransmutation.class, ScrollOfMetamorphosis.class);
 		exoToReg.put(ScrollOfMetamorphosis.class, ScrollOfTransmutation.class);
 	}
-	
+	{
+		weight_multiplier = 0.5f;
+	}
 	@Override
 	public boolean isKnown() {
 		return anonymous || (handler != null && handler.isKnown( exoToReg.get(this.getClass()) ));

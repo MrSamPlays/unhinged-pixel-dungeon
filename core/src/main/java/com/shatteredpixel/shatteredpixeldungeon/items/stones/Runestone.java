@@ -41,6 +41,7 @@ public abstract class Runestone extends Item {
 	{
 		stackable = true;
 		defaultAction = AC_THROW;
+		weight_multiplier = 0.01f;
 	}
 
 	//anonymous stones don't count as consumed, do not drop, etc.

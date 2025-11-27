@@ -76,7 +76,7 @@ public class Bomb extends Item {
 
 		defaultAction = AC_LIGHTTHROW;
 		usesTargeting = true;
-
+		weight_multiplier = 0.5f;
 		stackable = true;
 	}
 

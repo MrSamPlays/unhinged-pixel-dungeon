@@ -45,7 +45,7 @@ public class ElixirOfMight extends Elixir {
 
 	{
 		image = ItemSpriteSheet.ELIXIR_MIGHT;
-
+		weight_multiplier = 1f;
 		unique = true;
 
 		talentFactor = 2f;

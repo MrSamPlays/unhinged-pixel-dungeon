@@ -31,7 +31,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 
 public abstract class Elixir extends Potion {
-	
+	{
+		weight_multiplier = 0.5f;
+	}
 	public abstract void apply( Hero hero );
 	
 	@Override

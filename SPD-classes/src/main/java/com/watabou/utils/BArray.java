@@ -159,4 +159,14 @@ public class BArray {
 		
 		return result;
 	}
+	// return how many true elements in an array
+	public static int howMany(final boolean[] a) {
+		int result = 0;
+        for (boolean b : a) {
+            if (b) {
+                result++;
+            }
+        }
+		return result;
+	}
 }

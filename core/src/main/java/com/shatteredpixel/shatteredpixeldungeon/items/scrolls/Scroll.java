@@ -105,6 +105,7 @@ public abstract class Scroll extends Item {
 	{
 		stackable = true;
 		defaultAction = AC_READ;
+		weight_multiplier = 0.1f;
 	}
 	
 	@SuppressWarnings("unchecked")

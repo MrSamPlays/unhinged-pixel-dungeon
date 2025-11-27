@@ -112,6 +112,12 @@ public class Ankh extends Item {
 		blessed = true;
 	}
 
+	@Override
+	public float weightValue() {
+		weight_multiplier = (blessed ? 2 : 1);
+		return weight_multiplier;
+	}
+
 	private static final Glowing WHITE = new Glowing( 0xFFFFCC );
 
 	@Override

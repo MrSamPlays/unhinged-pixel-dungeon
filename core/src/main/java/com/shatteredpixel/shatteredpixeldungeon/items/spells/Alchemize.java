@@ -61,6 +61,7 @@ public class Alchemize extends Spell {
 		image = ItemSpriteSheet.ALCHEMIZE;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.05f;
 	}
 
 	private static WndBag parentWnd;

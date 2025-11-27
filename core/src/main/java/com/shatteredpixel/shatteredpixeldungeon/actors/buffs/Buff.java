@@ -69,6 +69,10 @@ public class Buff extends Actor {
 	public HashSet<Class> immunities() {
 		return new HashSet<>(immunities);
 	}
+
+	protected HashSet<Class> weaknesses = new HashSet<>();
+
+	public HashSet<Class> weaknesses() { return new HashSet<>(weaknesses); }
 	
 	public boolean attachTo( Char target ) {
 
@@ -173,7 +177,7 @@ public class Buff extends Actor {
 
 	public static<T extends FlavourBuff> T append( Char target, Class<T> buffClass, float duration ) {
 		T buff = append( target, buffClass );
-		buff.spend( duration * target.resist(buffClass) );
+		buff.spend( duration * target.resist(buffClass) * target.weakness(buffClass) );
 		return buff;
 	}
 

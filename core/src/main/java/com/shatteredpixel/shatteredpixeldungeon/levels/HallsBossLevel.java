@@ -103,18 +103,8 @@ public class HallsBossLevel extends Level {
 					} else {
 						Music.INSTANCE.play(Assets.Music.HALLS_BOSS, true);
 					}
-				} else if (fist.equals(YogFist.BurningFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_BURNING_FIST, true);
-                } else if (fist.equals(YogFist.SoiledFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_SOILED_FIST, true);
-				} else if (fist.equals(YogFist.RottingFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_ROTTING_FIST, true);
-				} else if (fist.equals(YogFist.RustedFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_RUSTED_FIST, true);
-				} else if (fist.equals(YogFist.BrightFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_BRIGHT_FIST, true);
-				}else if (fist.equals(YogFist.DarkFist.class)) {
-					Music.INSTANCE.play(Assets.Music.HALLS_BOSS_DARK_FIST, true);
+				} else {
+					Music.INSTANCE.play(YogDzewa.getFistMusic(fist), true);
 				}
 			}
 		//if exit isn't unlocked

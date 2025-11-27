@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.EbonyMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
@@ -105,7 +106,7 @@ public abstract class RegularLevel extends Level {
 
     protected Room roomEntrance;
     protected Room roomExit;
-    protected final int MOB_CAP = 25;
+    protected final int MOB_CAP = 30;
     @Override
     protected boolean build() {
 
@@ -221,12 +222,17 @@ public abstract class RegularLevel extends Level {
     public int mobLimit() { // increases with evolution
         if (Dungeon.depth <= 1) {
             if (!Statistics.amuletObtained) return 0;
-            else return 20;
+            else return MOB_CAP;
         }
-
-        int mobs = (int) ((5 + Dungeon.depth % 5) * (10/(8 + evo_factor)));
+        Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
+        int mobs = (5 + Dungeon.depth * 2);
+        int space = BArray.howMany(passable);
+        mobs += (int) Math.ceil(space * o.getLevel())/25;
         if (feeling == Feeling.LARGE) {
-            mobs = (int) Math.ceil(mobs * 1.5f);
+            mobs = (int) Math.ceil(mobs * 1.75f);
+        }
+        if (mobs > space) {
+            mobs = space;
         }
         return Math.min(mobs, MOB_CAP);
     }

@@ -27,7 +27,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -49,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
@@ -92,7 +92,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrapMechanism;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.HeavyBoomerang;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
@@ -106,7 +105,6 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
-import com.shatteredpixel.shatteredpixeldungeon.services.updates.Updates;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -154,8 +152,7 @@ public abstract class Level implements Bundlable {
 	protected int height;
 	protected int length;
 	
-	protected static final float TIME_TO_RESPAWN	= 35;
-	protected static final float MIN_EVO_FACTOR = 0.01f;
+	protected static final float TIME_TO_RESPAWN	= 50;
 
 	public int version;
 	
@@ -495,7 +492,6 @@ public abstract class Level implements Bundlable {
 		if (bundle.contains( "respawner" )){
 			respawner = (MobSpawner) bundle.get("respawner");
 		}
-		evo_factor = bundle.getFloat(EVOLUTION);
 		buildFlagMaps();
 		cleanWalls();
 
@@ -521,7 +517,6 @@ public abstract class Level implements Bundlable {
 		bundle.put( FEELING, feeling );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
-		bundle.put(EVOLUTION, evo_factor);
 	}
 	
 	public int tunnelTile() {
@@ -583,30 +578,30 @@ public abstract class Level implements Bundlable {
 	}
 
 	// logic to update evo_factor
-	public void updateEvoFactor(Object reason) {
-		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
-		// Evo factor is unaffected when inside a quest zone or a boss level
-		if (reason instanceof LevelTransition || Dungeon.branch != 0 || Dungeon.depth % 5 == 0) {
-			evo_factor = 1f;
-			Dungeon.hero.overwhelm = 0;
-			return;
-		}
-		if (reason == null) {
-			evo_factor -= 0.0001f;
-		}
-		// triggering traps also increases evolution
-		if (reason instanceof Trap) {
-			evo_factor -= 0.0002f;
-		}
-		// hero killing mobs increases spawn rate more
-		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
-			evo_factor -= 0.0065f;
-		}
-
-		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
-		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
-		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
-	}
+//	public void updateEvoFactor(Object reason) {
+//		// switching levels/floors resets the evo factor (you can abuse this by constantly switching floors)
+//		// Evo factor is unaffected when inside a quest zone or a boss level
+//		if (reason instanceof LevelTransition || Dungeon.branch != 0 || Dungeon.depth % 5 == 0) {
+//			evo_factor = 1f;
+//			Dungeon.hero.overwhelm = 0;
+//			return;
+//		}
+//		if (reason == null) {
+//			evo_factor -= 0.0001f;
+//		}
+//		// triggering traps also increases evolution
+//		if (reason instanceof Trap) {
+//			evo_factor -= 0.0002f;
+//		}
+//		// hero killing mobs increases spawn rate more
+//		if (reason == Dungeon.hero || reason instanceof Weapon || reason instanceof Weapon.Enchantment) {
+//			evo_factor -= 0.0065f;
+//		}
+//
+//		// evolution is capped to prevent division by 0 as well as not break the game with mob limit rules (switching levels resets the evo factor)
+//		System.out.printf("Evo Factor: %f \n", evo_factor); // debug information
+//		evo_factor = Math.max(evo_factor, MIN_EVO_FACTOR);
+//	}
 	public LevelTransition getTransition(LevelTransition.Type type){
 		if (transitions.isEmpty()){
 			return null;
@@ -649,7 +644,26 @@ public abstract class Level implements Bundlable {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
 		Game.switchScene(InterlevelScene.class);
-		updateEvoFactor(transition);
+		Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
+		o.updateLevel(transition);
+		ArrayList<Mob> mobsToRemove = new ArrayList<>();
+		// remove excess mobs to keep overwhelm factor from restacking, shouldn't be too many mobs.
+		int i = Dungeon.level.mobCount();
+		for (Mob m : Dungeon.level.mobs) {
+			if (i <= Dungeon.level.mobLimit()) {
+				// don't remove mobs less than the mob limit
+				break;
+			}
+			if (!m.reset()) {
+				mobsToRemove.add(m);
+				i--;
+			}
+		}
+		while (!mobsToRemove.isEmpty()) {
+			Dungeon.level.mobs.remove(mobsToRemove.remove(0));
+		}
+		GameScene.updateMap();
+
 		return true;
 	}
 
@@ -795,7 +809,6 @@ public abstract class Level implements Bundlable {
 	}
 
 	// mob spawns are more frequent now
-	// TODO new mechanic to increase spawn rate if you stay on the same floor too long.
 	public float respawnCooldown(){
 		float cooldown;
 		if (Statistics.amuletObtained){
@@ -813,7 +826,12 @@ public abstract class Level implements Bundlable {
 		}
 		// time factor
 		// updateEvoFactor(null);
-		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime() * evo_factor;
+		Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
+        cooldown = 1 + (cooldown * (1 - o.getLevel()) * (Dungeon.level.mobCount()/10f));
+
+		cooldown /= DimensionalSundial.spawnMultiplierAtCurrentTime();
+		cooldown = Math.max(cooldown, 1f);
+		return cooldown;
 	}
 
 	public boolean spawnMob(int disLimit){
@@ -913,7 +931,7 @@ public abstract class Level implements Bundlable {
 			secret[i]		= (flags & Terrain.SECRET) != 0;
 			solid[i]		= (flags & Terrain.SOLID) != 0;
 			avoid[i]		= (flags & Terrain.AVOID) != 0;
-			trap_passable[i]         = ((flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0) && (flags & (Terrain.PIT)) == 0;
+			trap_passable[i]         = ((flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0) && (flags & (Terrain.PIT)) == 0; // workaround to prevent mobs from walking into pits, note that traps have not been initialized at this point.
 			water[i]		= (flags & Terrain.LIQUID) != 0;
 			pit[i]			= (flags & Terrain.PIT) != 0;
 		}
@@ -921,7 +939,10 @@ public abstract class Level implements Bundlable {
 		for (Blob b : blobs.values()){
 			b.onBuildFlagMaps(this);
 		}
-		
+		// Boundary is not passable and not visible beyond
+		// 0, 1, 2 ... width() - 1,
+		// width(), width + 1, width + 2..., 2 * width - 1
+		// length() - width(), length - width + 1 ... length()
 		int lastRow = length() - width();
 		for (int i=0; i < width(); i++) {
 			passable[i] = avoid[i] = trap_passable[i] = false;
@@ -953,7 +974,6 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-
 	}
 
 	public void destroy( int pos ) {
@@ -1008,7 +1028,7 @@ public abstract class Level implements Bundlable {
 		level.secret[cell]		    = (flags & Terrain.SECRET) != 0;
 		level.solid[cell]			= (flags & Terrain.SOLID) != 0;
 		level.avoid[cell]			= (flags & Terrain.AVOID) != 0;
-		level.trap_passable[cell]   = (flags & (Terrain.AVOID | Terrain.PASSABLE)) != 0;
+		level.trap_passable[cell]   = (flags & (Terrain.PASSABLE)) != 0 || (level.traps.get(cell) != null); // traps ok here since they are already set
 		level.pit[cell]			    = (flags & Terrain.PIT) != 0;
 		level.water[cell]			= terrain == Terrain.WATER;
 

@@ -49,7 +49,7 @@ public class Amulet extends Item {
 	
 	{
 		image = ItemSpriteSheet.AMULET;
-		
+		weight_multiplier = 0;
 		unique = true;
 	}
 	

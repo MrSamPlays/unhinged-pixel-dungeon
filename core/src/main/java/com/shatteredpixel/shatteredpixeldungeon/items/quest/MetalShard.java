@@ -36,7 +36,12 @@ public class MetalShard extends Item {
 		image = ItemSpriteSheet.SHARD;
 		stackable = true;
 	}
-	
+
+	@Override
+	public float weightValue() {
+		return 0.03f * quantity();
+	}
+
 	@Override
 	public boolean isUpgradable() {
 		return false;

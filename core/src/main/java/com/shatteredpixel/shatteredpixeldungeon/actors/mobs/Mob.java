@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
@@ -113,6 +114,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -122,6 +124,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Objects;
 
 public abstract class Mob extends Char {
 
@@ -416,7 +420,7 @@ public abstract class Mob extends Char {
                 return null;
             } else {
                 //go after the closest potential enemy, preferring enemies that can be reached/attacked, and the hero if two are equidistant
-                PathFinder.buildDistanceMap(pos, Dungeon.findPassable(this, Dungeon.level.trap_passable, fieldOfView, true));
+                PathFinder.buildDistanceMap(pos, Dungeon.findPassable(this, Dungeon.level.passable, fieldOfView, true));
                 Char closest = null;
                 int closestDist = Integer.MAX_VALUE;
 
@@ -540,6 +544,13 @@ public abstract class Mob extends Char {
         return true;
     }
 
+    // helper function to guarantee correct setup of paths through traps
+    public void setupTrapPaths() {
+        System.arraycopy(Dungeon.level.passable, 0, Dungeon.level.trap_passable, 0,Dungeon.level.passable.length);
+        for (int i : Dungeon.level.traps.keyArray()) {
+            Dungeon.level.trap_passable[i] = Actor.findChar(i) == null;
+        }
+    }
     protected boolean getCloser(int target) {
 
         if (rooted || target == pos || !Dungeon.level.insideMap(target)) {
@@ -643,7 +654,7 @@ public abstract class Mob extends Char {
                     } else {
                         //otherwise, check if other characters are forcing us to take a very slow route
                         // and don't try to go around them yet in response, basically assume their blockage is temporary
-                        PathFinder.Path ignoreChars = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, false);
+                        PathFinder.Path ignoreChars = Dungeon.findPath(this, target, Dungeon.level.passable, fieldOfView, false);
                         if (ignoreChars != null && (full == null || full.size() > 2 * ignoreChars.size())) {
                             //check if first cell of shorter path is valid. If it is, use new shorter path. Otherwise do nothing and wait.
                             path = ignoreChars;
@@ -651,14 +662,34 @@ public abstract class Mob extends Char {
                                 return false;
                             }
                         } else {
-                            // when hunting ignore stepping on traps
-                            if (full.size() < 5 || Random.Int(0, 2) != 0) { // if we're close step on traps
-                                full = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, true);
-                            }
-
+//                            // when hunting ignore stepping on traps
+                            setupTrapPaths();
+                            full = Dungeon.findPath(this, target, Dungeon.level.trap_passable, fieldOfView, true);
                             path = full;
                         }
                     }
+                } else {
+                    // we weren't able to repath, find an open slot nearby and move there (unless we're a supercharged DM-300, then run DM300's custom pathfinder logic)
+                    if (this instanceof DM300) {
+                        return false;
+                    }
+                    PathFinder.Path valid = new PathFinder.Path();
+                    for (int i : PathFinder.NEIGHBOURS8) {
+                        if (Dungeon.level.trap_passable[pos + i] && Actor.findChar(pos + i) == null && cellIsPathable(pos + i)) {
+                            valid.add(pos + i);
+                        }
+                    }
+                    // randomly choose a random adjacent cell
+                    if (!valid.isEmpty()) {
+                        Random.shuffle(valid);
+                        step = valid.getLast();
+                        move(step);
+                        return true;
+                    } else {
+                        // last ditch, no valid path found, do nothing and wait
+                        return false;
+                    }
+
                 }
             }
 
@@ -689,6 +720,7 @@ public abstract class Mob extends Char {
             }
         }
         // they're too busy running away to go around traps lol (implicit buffs to stone of fear and scroll of terror)
+        setupTrapPaths();
         int step = Dungeon.flee(this, target, Dungeon.level.trap_passable, fieldOfView, true);
         if (step != -1) {
             move(step);
@@ -697,7 +729,6 @@ public abstract class Mob extends Char {
             return false;
         }
     }
-
     @Override
     public void updateSpriteState() {
         super.updateSpriteState();
@@ -978,7 +1009,11 @@ public abstract class Mob extends Char {
                 }
             }
         }
-        Dungeon.level.updateEvoFactor(cause);
+        if (Dungeon.hero.buff(Overwhelm.class) != null) {
+            Dungeon.hero.buff(Overwhelm.class).updateLevel(cause);
+        } else {
+            Buff.affect(Dungeon.hero, Overwhelm.class).updateLevel(cause);
+        }
     }
 
     public float lootChance() {
@@ -1003,7 +1038,7 @@ public abstract class Mob extends Char {
     }
 
     public void rollToDropLoot() {
-        if (Dungeon.hero.lvl > maxLvl + 2 && Random.Int(0,4) != 0) return;
+        if ((Dungeon.hero.lvl > maxLvl + 2 && Random.Int(0,4) != 0)) return;
 
         MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
         if (stolen == null || !stolen.itemWasStolen()) {

@@ -85,6 +85,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
@@ -131,7 +132,7 @@ public class Armor extends EquipableItem {
 	private static final int USES_TO_ID = 10;
 	private float usesLeftToID = USES_TO_ID;
 	private float availableUsesToID = USES_TO_ID/2f;
-	
+
 	public Armor( int tier ) {
 		this.tier = tier;
 	}
@@ -692,6 +693,12 @@ public class Armor extends EquipableItem {
 		Random.popGenerator();
 
 		return this;
+	}
+
+	@Override
+	public float weightValue() {
+		weight_multiplier = (float) Math.max(1,Math.pow(2,tier-1) - (level()*(tier)/2f)); // weight is exponentially proportional to tier {1,2,4,8,16}, upgraded armor is lighter
+		return weight_multiplier / (masteryPotionBonus ? 15f : 1f); // potions of mastery reduce the weight fivefold
 	}
 
 	public int STRReq(){

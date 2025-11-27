@@ -42,7 +42,7 @@ public class SupplyRation extends Food {
 	{
 		image = ItemSpriteSheet.SUPPLY_RATION;
 		energy = 2*Hunger.HUNGRY/3f; //200 food value
-
+		weight_multiplier = 0.3f;
 		bones = false;
 	}
 

@@ -63,6 +63,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overloaded;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overwhelm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PhysicalEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
@@ -178,6 +180,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndHero;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTradeItem;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.BArray;
@@ -213,7 +216,6 @@ public class Hero extends Char {
 	public ArmorAbility armorAbility = null;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	public LinkedHashMap<Talent, Talent> metamorphedTalents = new LinkedHashMap<>();
-	public int overwhelm = 0;
 	private int attackSkill = 10;
 	private int defenseSkill = 5;
 
@@ -454,6 +456,8 @@ public class Hero extends Char {
 		}
 		Buff.affect( this, Regeneration.class );
 		Buff.affect( this, Hunger.class );
+		Buff.affect(this, Overwhelm.class);
+		Buff.affect(this, Overloaded.class);
 	}
 	
 	public int tier() {
@@ -555,7 +559,10 @@ public class Hero extends Char {
 		if (buff(Scimitar.SwordDance.class) != null){
 			accuracy *= 1.50f;
 		}
-		
+		float excessWeight = Overloaded.getWeight() - STR();
+		if (excessWeight > 0) {
+			accuracy /= (1 + Buff.affect(this, Overloaded.class).getLevel());
+		}
 		if (!RingOfForce.fightingUnarmed(this)) {
 			return Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target )));
 		} else {
@@ -596,7 +603,10 @@ public class Hero extends Char {
 		if (paralysed > 0) {
 			evasion /= 2;
 		}
-
+		float excessWeight = Overloaded.getWeight() - STR();
+		if (excessWeight > 0) {
+			evasion /= (1 + Buff.affect(this, Overloaded.class).getLevel());
+		}
 		if (belongings.armor() != null) {
 			evasion = belongings.armor().evasionFactor(this, evasion);
 
@@ -734,9 +744,11 @@ public class Hero extends Char {
 		}
 
 		speed = AscensionChallenge.modifyHeroSpeed(speed);
-		
+		float excessWeight = Overloaded.getWeight() - STR();
+		if (excessWeight > 0) {
+			speed /= (1 + Buff.affect(this, Overloaded.class).getLevel());
+		}
 		return speed;
-		
 	}
 
 	@Override
@@ -746,6 +758,10 @@ public class Hero extends Char {
 		if (RingOfForce.fightingUnarmed(this))  return true;
 		if (STR() < ((Weapon)w).STRReq())       return false;
 		if (w instanceof Flail)                 return false;
+		if (buff(Overloaded.class) != null) {
+
+			return buff(Overloaded.class).getLevel() <= 1;
+		}
 
 		return super.canSurpriseAttack();
 	}
@@ -834,11 +850,9 @@ public class Hero extends Char {
 	
 	@Override
 	public boolean act() {
-
+		Buff.affect(this, Overloaded.class);
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
-		// time
-		Dungeon.level.updateEvoFactor(null);
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();
 		}
@@ -851,15 +865,6 @@ public class Hero extends Char {
 				//otherwise just directly re-calculate FOV
 				Dungeon.level.updateFieldOfView(this, fieldOfView);
 			}
-		}
-		float eps = 0.05f;
-
-		if (Dungeon.level.evo_factor < 0.8 + eps && Dungeon.level.evo_factor > 0.8 - eps && overwhelm == 0) {
-			GLog.n(Messages.get(Level.class,"evo_factor_warn"));
-			overwhelm++;
-		} else if (Dungeon.level.evo_factor < 0.6 + eps && Dungeon.level.evo_factor > 0.6 + eps && overwhelm == 1) {
-			GLog.n(Messages.get(Level.class,"evo_factor_danger"));
-			overwhelm++;
 		}
 		checkVisibleMobs();
 		BuffIndicator.refreshHero();
@@ -1089,6 +1094,7 @@ public class Hero extends Char {
 	public boolean waitOrPickup = false;
 
 	private boolean actPickUp( HeroAction.PickUp action ) {
+		Buff.affect(this, Overloaded.class);
 		int dst = action.dst;
 		if (pos == dst) {
 			
@@ -1125,7 +1131,6 @@ public class Hero extends Char {
 							GLog.i( Messages.capitalize(Messages.get(this, "you_now_have", item.name())) );
 						}
 					}
-					
 					curAction = null;
 				} else {
 
@@ -2238,6 +2243,7 @@ public class Hero extends Char {
 			public void call() {
 				GameScene.gameOver();
 				Sample.INSTANCE.play( Assets.Sounds.DEATH );
+				Music.INSTANCE.play(Assets.Music.THEME_2, true);
 			}
 		});
 

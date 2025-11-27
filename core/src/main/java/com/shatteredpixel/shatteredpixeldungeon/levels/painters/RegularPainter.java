@@ -470,8 +470,8 @@ public abstract class RegularPainter extends Painter {
 		float revealedChance = TrapMechanism.revealHiddenTrapChance();
 		float revealInc = 0;
 
-		//5x traps on traps level feeling, but the extra traps are all visible
-		for (int i = 0; i < (l.feeling == Level.Feeling.TRAPS ? 5*nTraps : nTraps); i++) {
+		//7x traps on traps level feeling, but the extra traps are all visible
+		for (int i = 0; i < (l.feeling == Level.Feeling.TRAPS ? 7*nTraps : nTraps); i++) {
 
 			Trap trap = Reflection.newInstance(trapClasses[Random.chances( trapChances )]);
 

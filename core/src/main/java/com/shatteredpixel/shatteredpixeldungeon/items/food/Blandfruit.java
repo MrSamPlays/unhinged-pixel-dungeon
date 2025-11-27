@@ -161,6 +161,14 @@ public class Blandfruit extends Food {
 	}
 
 	@Override
+	public float weightValue() {
+		if (potionAttrib != null) {
+			return potionAttrib.weightValue();
+		}
+		return 0.1f * quantity();
+	}
+
+	@Override
 	public int value() {
 		return 20 * quantity;
 	}
@@ -310,6 +318,7 @@ public class Blandfruit extends Food {
 			energy = Hunger.STARVING;
 
 			bones = true;
+			weight_multiplier = 0.1f;
 		}
 
 	}

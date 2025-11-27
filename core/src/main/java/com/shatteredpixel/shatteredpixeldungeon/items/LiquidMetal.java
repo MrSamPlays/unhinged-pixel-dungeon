@@ -61,6 +61,7 @@ public class LiquidMetal extends Item {
 		defaultAction = AC_APPLY;
 
 		bones = true;
+		weight_multiplier = 0.03f;
 	}
 
 	private static final String AC_APPLY = "APPLY";

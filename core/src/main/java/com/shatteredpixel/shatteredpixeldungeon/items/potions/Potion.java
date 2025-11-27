@@ -150,6 +150,7 @@ public class Potion extends Item {
 	{
 		stackable = true;
 		defaultAction = AC_DRINK;
+		weight_multiplier = 0.2f; // default for normal potions
 	}
 	
 	@SuppressWarnings("unchecked")

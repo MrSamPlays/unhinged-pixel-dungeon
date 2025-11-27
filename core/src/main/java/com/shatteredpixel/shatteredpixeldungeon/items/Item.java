@@ -85,7 +85,10 @@ public class Item implements Bundlable {
 	public boolean stackable = false;
 	protected int quantity = 1;
 	public boolean dropsDownHeap = false;
-	
+
+	// items have a weight multiplied by their stack size.
+	protected float weight_multiplier = 1; // default weight multiplier
+
 	private int level = 0;
 
 	public boolean levelKnown = false;
@@ -532,7 +535,6 @@ public class Item implements Bundlable {
 				}
 			}
 		}
-
 		return desc();
 	}
 	
@@ -558,7 +560,14 @@ public class Item implements Bundlable {
 	public int energyVal() {
 		return 0;
 	}
-	
+
+	public float weightValue() {
+		if (unique) {
+			return 0;
+		}
+		return quantity()*weight_multiplier;
+	}
+
 	public Item virtual(){
 		Item item = Reflection.newInstance(getClass());
 		if (item == null) return null;

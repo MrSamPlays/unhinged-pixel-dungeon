@@ -66,6 +66,9 @@ public class Artifact extends KindofMisc {
 
 	//used by some artifacts to keep track of duration of effects or cooldowns to use.
 	protected int cooldown = 0;
+	{
+		weight_multiplier = 2f;
+	}
 
 	@Override
 	public boolean doEquip( final Hero hero ) {

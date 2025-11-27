@@ -48,6 +48,7 @@ public class PhaseShift extends TargetedSpell {
 		usesTargeting = true;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.3f;
 	}
 	
 	@Override
@@ -96,5 +97,4 @@ public class PhaseShift extends TargetedSpell {
 		}
 		
 	}
-	
 }

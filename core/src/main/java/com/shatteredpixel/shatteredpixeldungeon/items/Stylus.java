@@ -58,6 +58,7 @@ public class Stylus extends Item {
 		defaultAction = AC_INSCRIBE;
 
 		bones = true;
+		weight_multiplier = 0.2f;
 	}
 	
 	@Override

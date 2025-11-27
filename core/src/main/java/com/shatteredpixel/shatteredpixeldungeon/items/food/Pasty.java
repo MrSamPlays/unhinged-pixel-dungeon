@@ -56,6 +56,7 @@ public class Pasty extends Food {
 		energy = Hunger.STARVING;
 
 		bones = true;
+		weight_multiplier = 0.5f;
 	}
 	
 	@Override

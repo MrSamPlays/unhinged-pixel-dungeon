@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlockTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrippingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.PoisonDartTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SurpriseTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TeleportationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WarpingTrap;
@@ -165,14 +166,14 @@ public class TrapsRoom extends SpecialRoom {
 	@SuppressWarnings("unchecked")
 	private static Class<?extends Trap>[][] levelTraps = new Class[][]{
 			//sewers
-			{GrippingTrap.class, TeleportationTrap.class, FlockTrap.class},
+			{GrippingTrap.class, TeleportationTrap.class, FlockTrap.class, SurpriseTrap.class},
 			//prison
-			{PoisonDartTrap.class, GrippingTrap.class, ExplosiveTrap.class},
+			{PoisonDartTrap.class, GrippingTrap.class, ExplosiveTrap.class, SurpriseTrap.class},
 			//caves
-			{PoisonDartTrap.class, FlashingTrap.class, ExplosiveTrap.class},
+			{PoisonDartTrap.class, FlashingTrap.class, ExplosiveTrap.class, SurpriseTrap.class},
 			//city
-			{WarpingTrap.class, FlashingTrap.class, DisintegrationTrap.class},
+			{WarpingTrap.class, FlashingTrap.class, DisintegrationTrap.class, SurpriseTrap.class},
 			//halls, muahahahaha
-			{GrimTrap.class}
+			{GrimTrap.class, SurpriseTrap.class}
 	};
 }

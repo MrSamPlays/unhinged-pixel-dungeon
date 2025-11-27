@@ -73,6 +73,7 @@ public class SummonElemental extends Spell {
 		image = ItemSpriteSheet.SUMMON_ELE;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.1f;
 	}
 
 	private Class<? extends Elemental> summonClass = Elemental.AllyNewBornElemental.class;

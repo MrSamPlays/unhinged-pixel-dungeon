@@ -57,6 +57,7 @@ public class ArcaneResin extends Item {
 		defaultAction = AC_APPLY;
 
 		bones = true;
+		weight_multiplier = 1;
 	}
 
 	private static final String AC_APPLY = "APPLY";
