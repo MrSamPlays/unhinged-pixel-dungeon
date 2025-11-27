@@ -87,7 +87,7 @@ public class DwarfKing extends Mob {
 	{
 		spriteClass = KingSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 300;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 1500 : 1000;
 		EXP = 40;
 		defenseSkill = 22;
 
@@ -218,7 +218,7 @@ public class DwarfKing extends Mob {
 					spend(3 * TICK);
 					summonsMade += 2;
 					return true;
-				} else if (shielding() <= 300 && summonsMade < 12){
+				} else if (shielding() <= Math.ceil(2*HT/3f) && summonsMade < 12){
 					if (summonsMade == 6) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -234,7 +234,7 @@ public class DwarfKing extends Mob {
 					summonsMade += 3;
 					spend(3*TICK);
 					return true;
-				} else if (shielding() <= 150 && summonsMade < 18) {
+				} else if (shielding() <= Math.ceil(HT/3f) && summonsMade < 18) {
 					if (summonsMade == 12) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -268,7 +268,7 @@ public class DwarfKing extends Mob {
 					spend(3 * TICK);
 					summonsMade++;
 					return true;
-				} else if (shielding() <= 200 && summonsMade < 8) {
+				} else if (shielding() <= Math.ceil(2*HT/3f) && summonsMade < 8) {
 					if (summonsMade == 4) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -282,7 +282,7 @@ public class DwarfKing extends Mob {
 					summonsMade++;
 					spend(TICK);
 					return true;
-				} else if (shielding() <= 100 && summonsMade < 12) {
+				} else if (shielding() <= Math.ceil(HT/3f) && summonsMade < 12) {
 					sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 					Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 					yell(Messages.get(this, "wave_3"));
@@ -493,8 +493,8 @@ public class DwarfKing extends Mob {
 			int dmgTaken = preHP - HP;
 			abilityCooldown -= dmgTaken/8f;
 			summonCooldown -= dmgTaken/8f;
-			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
-				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
+			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? HT/4.5f : HT/6f)) {
+				HP = (int) (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? HT/4.5f : HT/6f);
 				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 				ScrollOfTeleportation.appear(this, CityBossLevel.throne);
 				properties.add(Property.IMMOVABLE);
@@ -788,7 +788,7 @@ public class DwarfKing extends Mob {
 			super.detach();
 			for (Mob m : Dungeon.level.mobs){
 				if (m instanceof DwarfKing){
-					int damage = m.HT / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12);
+					int damage = (int) Math.ceil(m.HT / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18f : 12f));
 					m.damage(damage, this);
 				}
 			}

@@ -420,6 +420,5 @@ public class Necromancer extends Mob {
 				brightness(0.75f);
 			}
 		}
-		
 	}
 }

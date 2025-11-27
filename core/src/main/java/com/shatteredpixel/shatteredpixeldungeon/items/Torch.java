@@ -51,6 +51,7 @@ public class Torch extends Item {
 		stackable = true;
 		
 		defaultAction = AC_LIGHT;
+		weight_multiplier = 0.3f;
 	}
 	
 	@Override

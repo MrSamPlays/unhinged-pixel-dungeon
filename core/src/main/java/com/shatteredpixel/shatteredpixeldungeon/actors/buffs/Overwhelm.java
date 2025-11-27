@@ -53,7 +53,7 @@ public class Overwhelm extends Buff {
         float oldLevel = level;
         float multiplier = 1f; // evolve faster on ascension
         if (Dungeon.hero.buff(AscensionChallenge.class) != null) {
-            multiplier = (1+(26 - Dungeon.depth))/10f ;
+            multiplier = AscensionChallenge.overwhelmAscent();
         }
         multiplier = Math.max(1,multiplier);
         if (cause == null || cause.equals(TIME)) {
@@ -67,7 +67,7 @@ public class Overwhelm extends Buff {
                 return;
             }
             if (cause instanceof Hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment || cause instanceof Wand) {
-                level += 0.02f* multiplier; // mob killed because of hero
+                level += 0.015f* multiplier; // mob killed because of hero
             }
             if (cause instanceof Trap) {
                 level += 0.005f * multiplier; // triggered traps

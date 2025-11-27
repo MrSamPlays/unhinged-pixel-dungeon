@@ -89,6 +89,7 @@ abstract public class MissileWeapon extends Weapon {
 	public static final float MAX_DURABILITY = 100;
 	protected float durability = MAX_DURABILITY;
 	protected float baseUses = 8;
+
 	
 	public boolean holster;
 	
@@ -708,6 +709,11 @@ abstract public class MissileWeapon extends Weapon {
 			price = 1;
 		}
 		return price;
+	}
+
+	@Override
+	public float weightValue() {
+		return Math.max((float) (tier * quantity()) /defaultQuantity(), 1f/defaultQuantity()) / (masteryPotionBonus ? 8f : 1f);
 	}
 
 	private static final String SET_ID = "set_id";

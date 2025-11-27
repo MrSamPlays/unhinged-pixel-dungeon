@@ -43,6 +43,7 @@ public class Berry extends Food {
 		energy = Hunger.HUNGRY/3f; //100 food value
 
 		bones = false;
+		weight_multiplier = 0.01f;
 	}
 
 	@Override

@@ -142,6 +142,7 @@ public abstract class Plant implements Bundlable {
 		{
 			stackable = true;
 			defaultAction = AC_THROW;
+			weight_multiplier = 0.001f;
 		}
 		
 		protected Class<? extends Plant> plantClass;

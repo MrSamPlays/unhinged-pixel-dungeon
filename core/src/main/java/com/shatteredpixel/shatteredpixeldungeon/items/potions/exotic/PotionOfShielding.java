@@ -41,6 +41,7 @@ public class PotionOfShielding extends ExoticPotion {
 	
 	{
 		icon = ItemSpriteSheet.Icons.POTION_SHIELDING;
+		weight_multiplier = 1f;
 	}
 	
 	@Override

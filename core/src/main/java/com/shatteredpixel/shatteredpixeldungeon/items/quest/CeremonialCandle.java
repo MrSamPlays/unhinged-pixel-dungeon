@@ -63,6 +63,7 @@ public class CeremonialCandle extends Item {
 
 		unique = true;
 		stackable = true;
+		weight_multiplier = 0.1f;
 	}
 
 	@Override

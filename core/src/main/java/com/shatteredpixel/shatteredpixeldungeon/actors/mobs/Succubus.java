@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SuccubusSprite;
@@ -178,11 +179,11 @@ public class Succubus extends Mob {
 	@Override
 	public Item createLoot() {
 		Class<?extends Scroll> loot;
-		// succubi can now drop scrolls of identify and upgrade
-		// do{
-		loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
-		// } while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
+		// succubi can now drop scrolls of identify and upgrade (at a 50% lesser rate)
+		do{
+			loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
 
+		} while ((loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class) && Random.Float() < 0.5f);
 		return Reflection.newInstance(loot);
 	}
 

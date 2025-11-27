@@ -55,6 +55,7 @@ public class MagicalInfusion extends InventorySpell {
 		unique = true;
 
 		talentFactor = 2;
+		weight_multiplier = 0.8f; // a little heavier than a scroll of upgrade
 	}
 
 	@Override

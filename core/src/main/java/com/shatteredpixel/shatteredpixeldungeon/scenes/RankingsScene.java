@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -70,11 +71,14 @@ public class RankingsScene extends PixelScene {
 	public void create() {
 		
 		super.create();
-
-		Music.INSTANCE.playTracks(
-				new String[]{Assets.Music.THEME_1, Assets.Music.THEME_2},
-				new float[]{1, 1},
-				false);
+		if (!Statistics.ascended) {
+			Music.INSTANCE.playTracks(
+					new String[]{Assets.Music.THEME_1, Assets.Music.THEME_2},
+					new float[]{1, 1},
+					false);
+		} else {
+			Music.INSTANCE.play(Assets.Music.THEME_FINALE, true);
+		}
 
 		uiCamera.visible = false;
 		

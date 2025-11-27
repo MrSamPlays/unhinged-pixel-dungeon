@@ -56,7 +56,7 @@ public class CorpseDust extends Item {
 		
 		cursed = true;
 		cursedKnown = true;
-		
+		weight_multiplier = 1f;
 		unique = true;
 	}
 

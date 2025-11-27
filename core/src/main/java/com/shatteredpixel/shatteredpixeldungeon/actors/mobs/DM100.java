@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -83,7 +85,16 @@ public class DM100 extends Mob implements Callback {
 		return super.canAttack(enemy)
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
-	
+
+	@Override
+	public Item createLoot() {
+		Item item;
+		do {
+			item = super.createLoot();
+		} while (item.getClass() == ScrollOfUpgrade.class); // DM-100 will never drop a scroll of upgrade
+		return item;
+	}
+
 	//used so resistances can differentiate between melee and magical attacks
 	public static class LightningBolt{}
 	

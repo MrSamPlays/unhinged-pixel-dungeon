@@ -669,7 +669,10 @@ public abstract class Mob extends Char {
                         }
                     }
                 } else {
-                    // we weren't able to repath, find an open slot nearby and move there
+                    // we weren't able to repath, find an open slot nearby and move there (unless we're a supercharged DM-300, then run DM300's custom pathfinder logic)
+                    if (this instanceof DM300) {
+                        return false;
+                    }
                     PathFinder.Path valid = new PathFinder.Path();
                     for (int i : PathFinder.NEIGHBOURS8) {
                         if (Dungeon.level.trap_passable[pos + i] && Actor.findChar(pos + i) == null && cellIsPathable(pos + i)) {
@@ -1035,7 +1038,7 @@ public abstract class Mob extends Char {
     }
 
     public void rollToDropLoot() {
-        if (Dungeon.hero.lvl > maxLvl + 2 && Random.Int(0,4) != 0) return;
+        if ((Dungeon.hero.lvl > maxLvl + 2 && Random.Int(0,4) != 0)) return;
 
         MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
         if (stolen == null || !stolen.itemWasStolen()) {

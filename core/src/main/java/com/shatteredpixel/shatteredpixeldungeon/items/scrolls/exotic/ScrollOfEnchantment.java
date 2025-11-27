@@ -56,6 +56,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 		unique = true;
 
 		talentFactor = 2f;
+		weight_multiplier = 1f;
 	}
 
 	protected static boolean identifiedByUse = false;

@@ -81,7 +81,7 @@ public class Gold extends Item {
 		
 		return true;
 	}
-	
+
 	@Override
 	public boolean isUpgradable() {
 		return false;

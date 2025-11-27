@@ -56,6 +56,7 @@ public class Honeypot extends Item {
 		usesTargeting = true;
 
 		stackable = true;
+		weight_multiplier = 0.8f;
 	}
 	
 	@Override
@@ -162,6 +163,7 @@ public class Honeypot extends Item {
 		{
 			image = ItemSpriteSheet.SHATTPOT;
 			stackable = true;
+			weight_multiplier = 0.1f; //the bee takes up the bulk of the weight anyway
 		}
 
 		@Override

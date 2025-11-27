@@ -222,13 +222,17 @@ public abstract class RegularLevel extends Level {
     public int mobLimit() { // increases with evolution
         if (Dungeon.depth <= 1) {
             if (!Statistics.amuletObtained) return 0;
-            else return 20;
+            else return MOB_CAP;
         }
         Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
         int mobs = (5 + Dungeon.depth * 2);
-        mobs += (int) Math.ceil(10 * o.getLevel());
+        int space = BArray.howMany(passable);
+        mobs += (int) Math.ceil(space * o.getLevel())/25;
         if (feeling == Feeling.LARGE) {
             mobs = (int) Math.ceil(mobs * 1.75f);
+        }
+        if (mobs > space) {
+            mobs = space;
         }
         return Math.min(mobs, MOB_CAP);
     }

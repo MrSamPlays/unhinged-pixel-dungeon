@@ -27,7 +27,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -93,7 +92,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrapMechanism;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.HeavyBoomerang;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
@@ -107,7 +105,6 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
-import com.shatteredpixel.shatteredpixeldungeon.services.updates.Updates;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -155,8 +152,7 @@ public abstract class Level implements Bundlable {
 	protected int height;
 	protected int length;
 	
-	protected static final float TIME_TO_RESPAWN	= 35;
-	protected static final float MIN_EVO_FACTOR = 0.01f;
+	protected static final float TIME_TO_RESPAWN	= 50;
 
 	public int version;
 	
@@ -648,7 +644,26 @@ public abstract class Level implements Bundlable {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
 		Game.switchScene(InterlevelScene.class);
-		Buff.affect(Dungeon.hero, Overwhelm.class).updateLevel(transition);
+		Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
+		o.updateLevel(transition);
+		ArrayList<Mob> mobsToRemove = new ArrayList<>();
+		// remove excess mobs to keep overwhelm factor from restacking, shouldn't be too many mobs.
+		int i = Dungeon.level.mobCount();
+		for (Mob m : Dungeon.level.mobs) {
+			if (i <= Dungeon.level.mobLimit()) {
+				// don't remove mobs less than the mob limit
+				break;
+			}
+			if (!m.reset()) {
+				mobsToRemove.add(m);
+				i--;
+			}
+		}
+		while (!mobsToRemove.isEmpty()) {
+			Dungeon.level.mobs.remove(mobsToRemove.remove(0));
+		}
+		GameScene.updateMap();
+
 		return true;
 	}
 
@@ -794,7 +809,6 @@ public abstract class Level implements Bundlable {
 	}
 
 	// mob spawns are more frequent now
-	// TODO new mechanic to increase spawn rate if you stay on the same floor too long.
 	public float respawnCooldown(){
 		float cooldown;
 		if (Statistics.amuletObtained){
@@ -813,9 +827,11 @@ public abstract class Level implements Bundlable {
 		// time factor
 		// updateEvoFactor(null);
 		Overwhelm o = Buff.affect(Dungeon.hero, Overwhelm.class);
-        cooldown = 1 + (cooldown * (1 - o.getLevel()) * Dungeon.level.mobCount());
-        cooldown = Math.max(cooldown, 1f);
-		return cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime();
+        cooldown = 1 + (cooldown * (1 - o.getLevel()) * (Dungeon.level.mobCount()/10f));
+
+		cooldown /= DimensionalSundial.spawnMultiplierAtCurrentTime();
+		cooldown = Math.max(cooldown, 1f);
+		return cooldown;
 	}
 
 	public boolean spawnMob(int disLimit){

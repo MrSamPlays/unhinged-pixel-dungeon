@@ -44,6 +44,7 @@ public class PotionOfLevitation extends Potion {
 
 	{
 		icon = ItemSpriteSheet.Icons.POTION_LEVITATE;
+		weight_multiplier = 0.1f; // levitation potions weigh half as much as a normal potion
 	}
 
 	@Override

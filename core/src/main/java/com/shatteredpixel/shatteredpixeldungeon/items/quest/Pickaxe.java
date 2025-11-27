@@ -65,6 +65,11 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
+	public float weightValue() {
+		return (float) tier;
+	}
+
+	@Override
 	public int STRReq(int lvl) {
 		return super.STRReq(lvl) + 2; //tier 3 strength requirement with tier 2 damage stats
 	}

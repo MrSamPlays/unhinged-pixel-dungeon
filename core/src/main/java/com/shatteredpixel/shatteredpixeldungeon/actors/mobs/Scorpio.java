@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -129,10 +130,11 @@ public class Scorpio extends Mob {
 	@Override
 	public Item createLoot() {
 		Class<?extends Potion> loot;
-		loot = Random.oneOf(PotionOfHealing.class, PotionOfStrength.class);
+		do {
+			loot = Random.oneOf(PotionOfHealing.class, PotionOfStrength.class, PotionOfLevitation.class);
+		} while ((loot == PotionOfStrength.class && Random.Int(3) != 0));
 
 
 		return Reflection.newInstance(loot);
 	}
-	
 }

@@ -166,6 +166,8 @@ public class Piranha extends Mob {
 		for (Class c : new BlobImmunity().immunities()){
 			if (c != Electricity.class && c != Freezing.class){
 				immunities.add(c);
+			} else {
+				weaknesses.add(c); // weaker to electricity and freezing
 			}
 		}
 		immunities.add( Burning.class );

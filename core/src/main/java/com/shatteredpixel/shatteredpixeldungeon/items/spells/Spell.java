@@ -48,6 +48,7 @@ public abstract class Spell extends Item {
 	{
 		stackable = true;
 		defaultAction = AC_CAST;
+		weight_multiplier = 0.4f;
 	}
 	
 	@Override

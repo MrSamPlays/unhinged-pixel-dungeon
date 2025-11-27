@@ -63,6 +63,7 @@ public class Food extends Item {
 		defaultAction = AC_EAT;
 
 		bones = true;
+		weight_multiplier = 0.3f;
 	}
 	
 	@Override

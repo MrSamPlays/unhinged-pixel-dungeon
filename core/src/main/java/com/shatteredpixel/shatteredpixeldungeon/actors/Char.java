@@ -62,6 +62,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invulnerability;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
@@ -132,6 +133,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFireblast;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPrismaticLight;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
@@ -916,7 +918,8 @@ public abstract class Char extends Actor {
 		if (isImmune( srcClass )) {
 			damage = 0;
 		} else {
-			damage *= resist( srcClass );
+			damage *= resist( srcClass ); // first decrease damage based on resistance
+			damage *= weakness(srcClass); // then increase damage based on weakness
 		}
 
 		dmg = Math.round(damage);
@@ -1308,7 +1311,7 @@ public abstract class Char extends Actor {
 	protected final HashSet<Class> resistances = new HashSet<>();
 	
 	//returns percent effectiveness after resistances
-	//TODO currently resistances reduce effectiveness by a static 50%, and do not stack.
+	//resistance is now a random float between 25% and 75%
 	public float resist( Class effect ){
 		HashSet<Class> resists = new HashSet<>(resistances);
 		for (Property p : properties()){
@@ -1321,7 +1324,28 @@ public abstract class Char extends Actor {
 		float result = 1f;
 		for (Class c : resists){
 			if (c.isAssignableFrom(effect)){
-				result *= 0.5f;
+				result *= Random.Float(0.25f,0.75f);
+			}
+		}
+		return result * RingOfElements.resist(this, effect);
+	}
+
+	protected final HashSet<Class> weaknesses = new HashSet<>();
+
+	// like resistances but the opposite
+	public float weakness(Class effect) {
+		HashSet<Class> resists = new HashSet<>(weaknesses);
+		for (Property p : properties()){
+			resists.addAll(p.weaknesses());
+		}
+		for (Buff b : buffs()){
+			resists.addAll(b.weaknesses());
+		}
+
+		float result = 1f;
+		for (Class c : resists){
+			if (c.isAssignableFrom(effect)){
+				result /= Random.Float(0.25f,0.75f);
 			}
 		}
 		return result * RingOfElements.resist(this, effect);
@@ -1373,13 +1397,15 @@ public abstract class Char extends Actor {
 				new HashSet<Class>( Arrays.asList(AllyBuff.class, Dread.class) )),
 		BOSS_MINION,
 		UNDEAD,
-		DEMONIC,
+		DEMONIC(new HashSet<>(), new HashSet<>(), new HashSet<>(Arrays.asList(WandOfPrismaticLight.class, Light.class))), // demonic enemies are vulnerable to light
 		INORGANIC ( new HashSet<Class>(),
 				new HashSet<Class>( Arrays.asList(Bleeding.class, ToxicGas.class, Poison.class) )),
 		FIERY ( new HashSet<Class>( Arrays.asList(WandOfFireblast.class, Elemental.FireElemental.class)),
-				new HashSet<Class>( Arrays.asList(Burning.class, Blazing.class))),
+				new HashSet<Class>( Arrays.asList(Burning.class, Blazing.class)),
+				new HashSet<Class>(Arrays.asList(Chill.class, Frost.class))),
 		ICY ( new HashSet<Class>( Arrays.asList(WandOfFrost.class, Elemental.FrostElemental.class)),
-				new HashSet<Class>( Arrays.asList(Frost.class, Chill.class))),
+				new HashSet<Class>( Arrays.asList(Frost.class, Chill.class)),
+				new HashSet<Class>(Arrays.asList(Burning.class, Blazing.class))),
 		ACIDIC ( new HashSet<Class>( Arrays.asList(Corrosion.class)),
 				new HashSet<Class>( Arrays.asList(Ooze.class))),
 		ELECTRIC ( new HashSet<Class>( Arrays.asList(WandOfLightning.class, Shocking.class, Potential.class,
@@ -1395,14 +1421,21 @@ public abstract class Char extends Actor {
 
 		private HashSet<Class> resistances;
 		private HashSet<Class> immunities;
+		private HashSet<Class> weaknesses;
 		
 		Property(){
-			this(new HashSet<Class>(), new HashSet<Class>());
+			this(new HashSet<Class>(), new HashSet<Class>(), new HashSet<Class>());
 		}
 		
 		Property( HashSet<Class> resistances, HashSet<Class> immunities){
 			this.resistances = resistances;
 			this.immunities = immunities;
+			this.weaknesses = new HashSet<>();
+		}
+		Property( HashSet<Class> resistances, HashSet<Class> immunities, HashSet<Class> weaknesses){
+			this.resistances = resistances;
+			this.immunities = immunities;
+			this.weaknesses = weaknesses;
 		}
 		
 		public HashSet<Class> resistances(){
@@ -1412,7 +1445,9 @@ public abstract class Char extends Actor {
 		public HashSet<Class> immunities(){
 			return new HashSet<>(immunities);
 		}
-
+		public HashSet<Class> weaknesses() {
+			return new HashSet<>(weaknesses);
+		}
 	}
 
 	public static boolean hasProp( Char ch, Property p){

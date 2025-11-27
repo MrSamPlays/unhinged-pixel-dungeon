@@ -34,7 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import java.util.ArrayList;
 
 public abstract class Brew extends Potion {
-	
+	{
+		weight_multiplier = 0.5f;
+	}
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );

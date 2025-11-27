@@ -61,6 +61,7 @@ public class BeaconOfReturning extends Spell {
 		image = ItemSpriteSheet.RETURN_BEACON;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.5f; // teleportation tools can be hefty
 	}
 	
 	public int returnDepth	= -1;

@@ -51,6 +51,7 @@ public class ExoticPotion extends Potion {
 	
 	{
 		//sprite = equivalent potion sprite but one row down
+		weight_multiplier = 0.5f; // potion of shielding is double
 	}
 	
 	public static final LinkedHashMap<Class<?extends Potion>, Class<?extends ExoticPotion>> regToExo = new LinkedHashMap<>();

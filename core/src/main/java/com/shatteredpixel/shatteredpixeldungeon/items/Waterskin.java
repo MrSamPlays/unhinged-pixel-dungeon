@@ -86,6 +86,11 @@ public class Waterskin extends Item {
 	}
 
 	@Override
+	public float weightValue() {
+		return (float) volume/MAX_VOLUME;
+	}
+
+	@Override
 	public void execute( final Hero hero, String action ) {
 
 		super.execute( hero, action );

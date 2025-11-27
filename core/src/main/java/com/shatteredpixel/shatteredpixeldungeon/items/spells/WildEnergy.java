@@ -53,6 +53,7 @@ public class WildEnergy extends TargetedSpell {
 		usesTargeting = true;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.2f;
 	}
 	
 	//we rely on cursedWand to do fx instead

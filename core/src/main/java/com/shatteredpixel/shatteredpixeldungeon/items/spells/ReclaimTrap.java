@@ -55,6 +55,7 @@ public class ReclaimTrap extends TargetedSpell {
 		image = ItemSpriteSheet.RECLAIM_TRAP;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.3f;
 	}
 
 	//This class has a variety of code for compat with pre-v3.0.0 saves

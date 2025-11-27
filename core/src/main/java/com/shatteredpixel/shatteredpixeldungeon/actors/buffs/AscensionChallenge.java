@@ -27,6 +27,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -67,7 +68,10 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.GameMath;
+import com.watabou.utils.Random;
 
 import java.util.HashMap;
 
@@ -75,34 +79,34 @@ public class AscensionChallenge extends Buff {
 
 	private static HashMap<Class<?extends Mob>, Float> modifiers = new HashMap<>();
 	static {
-		modifiers.put(Rat.class,            10f);
-		modifiers.put(Snake.class,          9f);
-		modifiers.put(Gnoll.class,          9f);
-		modifiers.put(Swarm.class,          8.5f);
-		modifiers.put(Crab.class,           8f);
-		modifiers.put(Slime.class,          8f);
+		modifiers.put(Rat.class,            15f);
+		modifiers.put(Snake.class,          14f);
+		modifiers.put(Gnoll.class,          13f);
+		modifiers.put(Swarm.class,          12f);
+		modifiers.put(Crab.class,           11f);
+		modifiers.put(Slime.class,          10f);
 
-		modifiers.put(Skeleton.class,       5f);
-		modifiers.put(Thief.class,          5f);
-		modifiers.put(DM100.class,          4.5f);
-		modifiers.put(Guard.class,          4f);
-		modifiers.put(Necromancer.class,    4f);
+		modifiers.put(Skeleton.class,       6f);
+		modifiers.put(Thief.class,          5.5f);
+		modifiers.put(DM100.class,          5f);
+		modifiers.put(Guard.class,          4.75f);
+		modifiers.put(Necromancer.class,    4.5f);
 
-		modifiers.put(Bat.class,            2.5f);
-		modifiers.put(Brute.class,          2.25f);
-		modifiers.put(Shaman.class,         2.25f);
-		modifiers.put(Spinner.class,        2f);
-		modifiers.put(DM200.class,          2f);
+		modifiers.put(Bat.class,            3f);
+		modifiers.put(Brute.class,          2.75f);
+		modifiers.put(Shaman.class,         2.5f);
+		modifiers.put(Spinner.class,        2.25f);
+		modifiers.put(DM200.class,          2.25f);
 
-		modifiers.put(Ghoul.class,          1.67f);
+		modifiers.put(Ghoul.class,          1.8f);
 		modifiers.put(Elemental.class,      1.67f);
-		modifiers.put(Warlock.class,        1.5f);
+		modifiers.put(Warlock.class,        1.55f);
 		modifiers.put(Monk.class,           1.5f);
-		modifiers.put(Golem.class,          1.33f);
+		modifiers.put(Golem.class,          1.4f);
 
-		modifiers.put(RipperDemon.class,    1.2f);
-		modifiers.put(Succubus.class,       1.2f);
-		modifiers.put(Eye.class,            1.1f);
+		modifiers.put(RipperDemon.class,    1.23f);
+		modifiers.put(Succubus.class,       1.225f);
+		modifiers.put(Eye.class,            1.125f);
 		modifiers.put(Scorpio.class,        1.1f);
 	}
 
@@ -158,8 +162,14 @@ public class AscensionChallenge extends Buff {
 				&& Dungeon.hero.buff(AscensionChallenge.class).stacks >= 6f){
 			return Math.min(speed/2f, 1f);
 		}
-
 		return speed;
+	}
+	// mob spawns are increased significantly, resulting in swarming
+	public static float overwhelmAscent() {
+		if (Dungeon.hero.buff(AscensionChallenge.class) != null && Dungeon.hero.buff(AscensionChallenge.class).stacks >= 8) {
+			return GameMath.gate(1f,(Dungeon.hero.buff(AscensionChallenge.class).stacks - 7.75f)*4, 10f);
+		}
+		return 1;
 	}
 
 	public static boolean qualifiedForPacifist(){
@@ -192,11 +202,12 @@ public class AscensionChallenge extends Buff {
 		}
 		if (!found) return;
 
+		// nerf reduction of amulet curses
 		float oldStacks = chal.stacks;
 		if (enemy instanceof Ghoul || enemy instanceof RipperDemon){
-			chal.stacks -= 0.5f;
+			chal.stacks -= 0.05f;
 		} else {
-			chal.stacks -= 1;
+			chal.stacks -= 0.1f;
 		}
 		chal.stacks = Math.max(0, chal.stacks);
 		if (!chal.stacksLowered) {
@@ -270,17 +281,18 @@ public class AscensionChallenge extends Buff {
 					}
 				}
 				Dungeon.level.spawnMob(12);
-
+				// roar on level switch
+				Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 			}
 		}
-		if (Statistics.highestAscent < 20){
+		// shopkeepers will flee if you increase the rate at which you are overwhelmed at any point during the ascent
+		if (Statistics.highestAscent < 20 && stacks >= 8){
 			for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
 				if (m instanceof Shopkeeper){
 					((Shopkeeper) m).flee();
 				}
 			}
 		}
-
 	}
 
 	//messages at boss levels only trigger on first ascent
@@ -299,8 +311,10 @@ public class AscensionChallenge extends Buff {
 		} else {
 			if (Dungeon.depth == 1){
 				GLog.n(Messages.get(this, "almost"));
-			} else if (stacks >= 8f){
+			} else if (stacks >= 10f){
 				GLog.n(Messages.get(this, "damage"));
+			} else if (stacks >= 8f){
+				GLog.n(Messages.get(this, "overwhelm"));
 			} else if (stacks >= 6f){
 				GLog.n(Messages.get(this, "slow"));
 			} else if (stacks >= 4f){
@@ -320,13 +334,19 @@ public class AscensionChallenge extends Buff {
 
 		beckonEnemies();
 
-		//hero starts progressively taking damage over time at 8+ stacks
-		if (stacks >= 8 && !Dungeon.bossLevel()){
-			damageInc += (stacks-4)/4f;
+		//hero starts progressively taking damage over time at 10+ stacks
+		if (stacks >= 10 && !Dungeon.bossLevel()){
+			damageInc += (stacks-6)/4f;
 			if (damageInc >= 1){
 				target.damage((int)damageInc, this);
 				damageInc -= (int)damageInc;
-
+				// random chance to inflict/extend a debuff
+				if (Random.Float()*stacks > 10f) {
+					Buff.prolong(Dungeon.hero, Cripple.class, 4f);
+				}
+				if (Random.Float()*stacks > 12f) {
+					Buff.affect(Dungeon.hero, Bleeding.class).set(damageInc, this.getClass());
+				}
 				if (target == Dungeon.hero && !target.isAlive()){
 					Badges.validateDeathFromFriendlyMagic();
 					GLog.n(Messages.get(this, "on_kill"));
@@ -356,8 +376,10 @@ public class AscensionChallenge extends Buff {
 			icon.hardlight(1, 0.67f, 0);
 		} else if (stacks < 8){
 			icon.hardlight(1, 0.33f, 0);
-		} else {
+		} else if (stacks < 10) {
 			icon.hardlight(1, 0, 0);
+		} else {
+			icon.hardlight(0.1f,0.1f,0.1f);
 		}
 	}
 
@@ -370,12 +392,11 @@ public class AscensionChallenge extends Buff {
 			desc += "\n" + Messages.get(this, "desc_clear");
 
 		} else {
-
 			if (stacks >= 2)    desc += "\n" + Messages.get(this, "desc_beckon");
 			if (stacks >= 4)    desc += "\n" + Messages.get(this, "desc_haste");
 			if (stacks >= 6)    desc += "\n" + Messages.get(this, "desc_slow");
-			if (stacks >= 8)    desc += "\n" + Messages.get(this, "desc_damage");
-
+			if (stacks >= 8)    desc += "\n" + Messages.get(this, "desc_overwhelm");
+			if (stacks >= 10)    desc += "\n" + Messages.get(this, "desc_damage");
 		}
 
 		return desc;

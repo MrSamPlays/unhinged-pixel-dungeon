@@ -48,6 +48,11 @@ public class GooBlob extends Item {
 	}
 
 	@Override
+	public float weightValue() {
+		return 0.01f * quantity();
+	}
+
+	@Override
 	public int value() {
 		return quantity * 30;
 	}

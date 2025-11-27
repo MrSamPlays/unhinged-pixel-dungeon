@@ -34,14 +34,24 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -51,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.GooSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Music;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -68,10 +79,12 @@ public class Goo extends Mob {
         properties.add(Property.BOSS);
         properties.add(Property.DEMONIC);
         properties.add(Property.ACIDIC);
+        immunities.add(Paralysis.class);
     }
 
     private int pumpedUp = 0;
     private int healInc = 1;
+    private int accumulated_water = 0;
     private boolean rageMusic = false;
 
     @Override
@@ -106,7 +119,7 @@ public class Goo extends Mob {
 
     @Override
     public int drRoll() {
-        return super.drRoll() + Random.NormalIntRange(0, 2);
+        return super.drRoll() + Random.NormalIntRange(0, 4);
     }
 
     @Override
@@ -118,7 +131,11 @@ public class Goo extends Mob {
         }
 
         if (!flying && Dungeon.level.water[pos] && HP < HT) {
-            HP += healInc;
+
+            // logic to evaporate water
+            for (int i: PathFinder.NEIGHBOURS9) {
+                evaporate(pos + i);
+            }
             Statistics.qualifiedForBossChallengeBadge = false;
 
             LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
@@ -162,7 +179,15 @@ public class Goo extends Mob {
 
         return super.act();
     }
-
+    // absorb water
+    private void evaporate(int pos) {
+        if (Dungeon.level.map[pos] == Terrain.WATER) {
+            Painter.set(Dungeon.level, pos, Terrain.EMPTY);
+            HP += healInc;
+            GameScene.updateMap(pos);
+            accumulated_water++;
+        }
+    }
     @Override
     protected boolean canAttack(Char enemy) {
         if (pumpedUp > 0) {
@@ -171,6 +196,9 @@ public class Goo extends Mob {
             return Dungeon.level.distance(enemy.pos, pos) <= 2
                     && new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == enemy.pos
                     && new Ballistica(enemy.pos, pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == pos;
+        } else if (accumulated_water > 0) {
+            return super.canAttack(enemy)
+                    && new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID).collisionPos == enemy.pos;
         } else {
             return super.canAttack(enemy);
         }
@@ -179,7 +207,7 @@ public class Goo extends Mob {
     @Override
     public int attackProc(Char enemy, int damage) {
         damage = super.attackProc(enemy, damage);
-        if (Random.Int(3) == 0) {
+        if (Random.Int(2) == 0) {
             Buff.affect(enemy, Ooze.class).set(Ooze.DURATION);
             enemy.sprite.burst(0x000000, 5);
         }
@@ -202,6 +230,9 @@ public class Goo extends Mob {
 
     @Override
     protected boolean doAttack(Char enemy) {
+        if (accumulated_water > 0 && pumpedUp == 0) {
+            zap();
+        }
         if (pumpedUp == 1) {
             pumpedUp++;
             ((GooSprite) sprite).pumpUp(pumpedUp);
@@ -231,7 +262,6 @@ public class Goo extends Mob {
             return !visible;
 
         } else {
-
             if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
                 pumpedUp += 2;
                 //don't want to overly punish players with slow move or attack speed
@@ -247,7 +277,6 @@ public class Goo extends Mob {
                 sprite.showStatus(CharSprite.WARNING, Messages.get(this, "!!!"));
                 GLog.n(Messages.get(this, "pumpup"));
             }
-
             return true;
         }
     }
@@ -264,7 +293,28 @@ public class Goo extends Mob {
         }
         return result;
     }
+    private void zap() {
+        spend(attackDelay());
+        Invisibility.dispel(this);
+        Char enemy = this.enemy;
+        //            int dmg = Random.NormalIntRange( 0, 3 );
+        //            dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+        //            enemy.damage( dmg, this);
+        GeyserTrap geyser = new GeyserTrap();
+        geyser.pos = enemy.pos;
+        geyser.source = this;
 
+        int userPos = enemy.pos;
+
+        Ballistica aim = new Ballistica(pos, userPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.STOP_CHARS);
+        if (aim.path.size() > aim.dist + 1) {
+            geyser.centerKnockBackDirection = aim.path.get(aim.dist + 1);
+        }
+        geyser.activate();
+        accumulated_water--;
+        sprite.zap(enemy.pos);
+
+    }
     @Override
     protected boolean getCloser(int target) {
         if (pumpedUp != 0) {
@@ -291,6 +341,7 @@ public class Goo extends Mob {
         }
         boolean bleeding = (HP * 2 <= HT);
         super.damage(dmg, src);
+
         if ((HP * 2 <= HT) && !bleeding) {
             BossHealthBar.bleed(true);
             sprite.showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
@@ -323,7 +374,6 @@ public class Goo extends Mob {
             } while (!Dungeon.level.passable[pos + ofs]);
             Dungeon.level.drop(new GooBlob(), pos + ofs).sprite.drop(pos);
         }
-
         Badges.validateBossSlain();
         if (Statistics.qualifiedForBossChallengeBadge) {
             Badges.validateBossChallengeCompleted();
@@ -351,6 +401,8 @@ public class Goo extends Mob {
     private final String PUMPEDUP = "pumpedup";
     private final String HEALINC = "healinc";
 
+    private final String WATER_AMT = "wateramt";
+
     @Override
     public void storeInBundle(Bundle bundle) {
 
@@ -358,6 +410,7 @@ public class Goo extends Mob {
 
         bundle.put(PUMPEDUP, pumpedUp);
         bundle.put(HEALINC, healInc);
+        bundle.put(WATER_AMT, accumulated_water);
     }
 
     @Override
@@ -370,6 +423,7 @@ public class Goo extends Mob {
         if ((HP * 2 <= HT)) BossHealthBar.bleed(true);
 
         healInc = bundle.getInt(HEALINC);
+        accumulated_water = bundle.getInt(WATER_AMT);
     }
 
 }

@@ -69,6 +69,7 @@ public class MeleeWeapon extends Weapon {
 
 	public static String AC_ABILITY = "ABILITY";
 
+
 	@Override
 	public void activate(Char ch) {
 		super.activate(ch);
@@ -269,6 +270,11 @@ public class MeleeWeapon extends Weapon {
 			req -= 2;
 		}
 		return req;
+	}
+
+	@Override
+	public float weightValue() {
+		return Math.max(1f,tier-(level()/3f)) / (masteryPotionBonus ? 6f : 1f);
 	}
 
 	private static boolean evaluatingTwinUpgrades = false;

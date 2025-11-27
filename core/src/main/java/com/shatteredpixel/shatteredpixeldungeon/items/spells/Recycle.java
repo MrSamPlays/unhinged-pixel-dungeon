@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 public class Recycle extends InventorySpell {
@@ -55,6 +56,7 @@ public class Recycle extends InventorySpell {
 
 		talentFactor = 2;
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.9f/(float) Recipe.OUT_QUANTITY;
 	}
 
 	@Override
@@ -69,26 +71,27 @@ public class Recycle extends InventorySpell {
 	@Override
 	protected void onItemSelected(Item item) {
 		Item result;
+		Random.pushGenerator();
 		do {
 			if (item instanceof Potion) {
-				result = Generator.randomUsingDefaults(Generator.Category.POTION);
+				result = Generator.random(Generator.Category.POTION);
 				if (item instanceof ExoticPotion){
 					result = Reflection.newInstance(ExoticPotion.regToExo.get(result.getClass()));
 				}
 			} else if (item instanceof Scroll) {
-				result = Generator.randomUsingDefaults(Generator.Category.SCROLL);
+				result = Generator.random(Generator.Category.SCROLL);
 				if (item instanceof ExoticScroll){
 					result = Reflection.newInstance(ExoticScroll.regToExo.get(result.getClass()));
 				}
 			} else if (item instanceof Plant.Seed) {
-				result = Generator.randomUsingDefaults(Generator.Category.SEED);
+				result = Generator.random(Generator.Category.SEED);
 			} else if (item instanceof Runestone) {
-				result = Generator.randomUsingDefaults(Generator.Category.STONE);
+				result = Generator.random(Generator.Category.STONE);
 			} else {
 				result = TippedDart.randomTipped(1);
 			}
 		} while (result.getClass() == item.getClass() || Challenges.isItemBlocked(result));
-		
+		Random.popGenerator();
 		item.detach(curUser.belongings.backpack);
 		GLog.p(Messages.get(this, "recycled", result.name()));
 		if (!result.collect()){

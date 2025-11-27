@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -150,7 +151,7 @@ public class UnstableSpellbook extends Artifact {
 		Scroll scroll;
 		do {
 			scroll = (Scroll) Generator.randomUsingDefaults(Generator.Category.SCROLL);
-		} while (scroll == null);
+		} while (scroll == null || ((scroll instanceof ScrollOfUpgrade) && Random.Int(3) != 0)); // scroll of upgrade is possible but unlikely
 
 		scroll.anonymize();
 		curItem = scroll;

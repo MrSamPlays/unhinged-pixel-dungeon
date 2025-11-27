@@ -51,6 +51,7 @@ public class TelekineticGrab extends TargetedSpell {
 		image = ItemSpriteSheet.TELE_GRAB;
 
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
+		weight_multiplier = 0.005f;
 	}
 
 	@Override
