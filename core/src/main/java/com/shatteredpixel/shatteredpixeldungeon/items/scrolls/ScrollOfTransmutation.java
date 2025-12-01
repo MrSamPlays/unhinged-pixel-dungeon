@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.Brew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Elixir;
@@ -64,7 +65,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Reflection;
 
 public class ScrollOfTransmutation extends InventoryScroll {
-	
+
 	{
 		icon = ItemSpriteSheet.Icons.SCROLL_TRANSMUTE;
 		
@@ -92,9 +93,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		} else if (item instanceof Scroll) {
 			return item != this || item.quantity() > 1 || identifiedByUse;
 
-		//all non-unique artifacts (no holy tome or cloak of shadows, basically)
+		//all non-unique artifacts (no holy tome or cloak of shadows, basically), but not an unstable spellbook if the source of the scroll is an unstable spellbook
 		} else if (item instanceof Artifact) {
-			return !item.unique;
+			return !item.unique && !(item instanceof UnstableSpellbook && anonymous);
 
 		//all rings, wands, trinkets, seeds, and runestones
 		} else {

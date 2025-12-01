@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -68,6 +69,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class UnstableSpellbook extends Artifact {
@@ -148,11 +150,22 @@ public class UnstableSpellbook extends Artifact {
 	public void doReadEffect(Hero hero){
 		charge--;
 
+		float[] scrollChances;
 		Scroll scroll;
+		// different probabilities during combat (Scrolls of Retribution and Rage are most likely during combat)
+		if (curUser.visibleEnemies() > 0) {
+			// Scroll identities 		UP, ID, REM, MIR, REC, TEL, LUL, MAP, RGE, RET, TER, TRN
+			scrollChances = new float[]{ 1,  2,   4,   6,   6,   7,   8,   3,   9,   9,   8,   1 };
+		} else {
+			// Scroll identities 		UP, ID, REM, MIR, REC, TEL, LUL, MAP, RGE, RET, TER, TRN
+			scrollChances = new float[]{ 1,  4,   6,   4,   5,   3,   5,   6,   2,   3,   2,   1 };
+		}
+		// custom probability distribution based on whether hero is in combat or not, detach from existing generator for more variability
+		Random.pushGenerator(new SecureRandom().nextLong());
 		do {
-			scroll = (Scroll) Generator.randomUsingDefaults(Generator.Category.SCROLL);
-		} while (scroll == null || ((scroll instanceof ScrollOfUpgrade) && Random.Int(3) != 0)); // scroll of upgrade is possible but unlikely
-
+			scroll = (Scroll) Reflection.newInstance(Generator.Category.SCROLL.classes[Random.chances(scrollChances)]);
+		} while (scroll == null);
+		Random.popGenerator();
 		scroll.anonymize();
 		curItem = scroll;
 		curUser = hero;
@@ -160,7 +173,6 @@ public class UnstableSpellbook extends Artifact {
 		//if there are charges left and the scroll has been given to the book
 		if (charge > 0 && !scrolls.contains(scroll.getClass())) {
 			final Scroll fScroll = scroll;
-
 			final ExploitHandler handler = Buff.affect(hero, ExploitHandler.class);
 			handler.scroll = scroll;
 

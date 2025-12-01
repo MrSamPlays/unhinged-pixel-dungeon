@@ -29,7 +29,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.0'
+        classpath 'com.android.tools.build:gradle:8.13.1'
     }
 }
 
@@ -39,8 +39,8 @@ allprojects {
         appName = 'Unhinged Pixel Dungeon'
         appPackageName = 'com.unhingedpx.unhingedpixeldungeon'
 
-        appVersionCode = 881
-        appVersionName = '0.0.4'
+        appVersionCode = 882
+        appVersionName = '0.0.5'
 
         appJavaCompatibility = JavaVersion.VERSION_11
 

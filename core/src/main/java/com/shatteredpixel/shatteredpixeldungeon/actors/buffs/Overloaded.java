@@ -110,6 +110,15 @@ public class Overloaded extends Buff {
     }
 
     @Override
+    public String desc() {
+        if (target.buff(Levitation.class) == null) {
+            return super.desc();
+        } else {
+            return Messages.get(this,"desc_lev");
+        }
+    }
+
+    @Override
     public int icon() {
         if (weightCat > 0) {
             return BuffIndicator.CRIPPLE;

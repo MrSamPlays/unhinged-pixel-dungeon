@@ -31,22 +31,28 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlashingTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrippingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ScorpioSprite;
+import com.watabou.noosa.MovieClip;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 public class Scorpio extends Mob {
-	
+	protected Trap trap;
 	{
 		spriteClass = ScorpioSprite.class;
 		
@@ -56,7 +62,7 @@ public class Scorpio extends Mob {
 		
 		EXP = 14;
 		maxLvl = 27;
-		
+
 		loot = Generator.Category.POTION;
 		lootChance = 0.5f;
 
@@ -65,18 +71,50 @@ public class Scorpio extends Mob {
 	@Override
 	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 		// scorpio's will try to trip aoe traps nearby
+
+		return super.attack(enemy, dmgMulti,dmgBonus,accMulti);
+	}
+
+	@Override
+	protected boolean doAttack(Char enemy) {
 		if (canAttack(enemy)) {
 			int pos = enemy.pos;
-			for (int i : PathFinder.NEIGHBOURS9) {
+			for (int i : PathFinder.NEIGHBOURS8) {
 				int cell = pos + i;
 				Trap t = Dungeon.level.traps.get(cell);
-				if (t != null && t.isAoE) {
-					return super.attack(enemy, 0,0,0) || new Ballistica(pos, cell, Ballistica.PROJECTILE).collisionPos == cell;
+				if (t == null) {
+					continue;
+				}
+				if (sprite != null && !(this.pos == cell || Dungeon.level.adjacent(this.pos, cell)) && t.active && t.visible && (t.isAoE || t.isNearest) && new Ballistica(this.pos, cell, Ballistica.PROJECTILE).collisionPos == cell) {
+					if (t.pos == cell) {
+						((ScorpioSprite) sprite).attack(cell);
+						trap = t;
+						GameScene.updateMap(cell);
+
+						return false;
+					} else if (enemy.pos == cell) {
+						return super.doAttack(enemy);
+					}
+
 				}
 			}
 		}
-		return super.attack(enemy, dmgMulti,dmgBonus,accMulti);
+		return super.doAttack(enemy);
 	}
+
+	@Override
+	public void onAttackComplete() {
+		if (trap != null) {
+			trap.trigger();
+			trap = null;
+			Invisibility.dispel(this);
+			spend(attackDelay());
+			next();
+			return;
+		}
+		super.onAttackComplete();
+	}
+
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 30, 40 );
@@ -104,7 +142,7 @@ public class Scorpio extends Mob {
 		if (Random.Int( 3 ) == 0) {
 			Buff.prolong( enemy, Cripple.class, Cripple.DURATION );
 		}
-		
+
 		return damage;
 	}
 	
